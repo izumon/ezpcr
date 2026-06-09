@@ -4,16 +4,28 @@
 \alias{ezread}
 \title{ezread}
 \usage{
-ezread(dir = "./", skip = 40)
+ezread(
+  dir = "./",
+  skip = 40,
+  samplename = "Sample Name",
+  targetname = "Target Name",
+  Ct = "CT"
+)
 }
 \arguments{
 \item{dir}{folder/directory.}
 
 \item{skip}{skip rows.}
+
+\item{samplename}{column of sample names.}
+
+\item{targetname}{column of target names.}
+
+\item{Ct}{column of Ct values.}
 }
 \value{
 dataframe.
 }
 \description{
-This function reads datas exported by quantstudio.
+This function reads data exported by QuantStudio.
 }

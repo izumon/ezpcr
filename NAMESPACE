@@ -2,6 +2,8 @@
 
 export(ext)
 export(ezGraph)
+export(ezPng)
+export(ezSvg)
 export(ezcalc)
 export(ezread)
 export(lsamples)

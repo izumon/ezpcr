@@ -19,7 +19,7 @@ library(readxl)
  #' @param Ct column of Ct values.
  #' @return dataframe.
 #' @export
-ezread<-function(dir="./",skip=40)
+ezread<-function(dir="./",skip=40,samplename='Sample Name',targetname='Target Name',Ct="CT")
 {
     library(dplyr)
     files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")
@@ -41,7 +41,7 @@ ezread<-function(dir="./",skip=40)
             print(sprintf("%s was not found.",paste(dir,f,sep="/")))
         }
     #A0<-subset(A0,subset=!is.na(Omit))
-    A0<-data.frame(Samples=A0$'Sample Name',Targets=A0$'Target Name',Ct=as.numeric(A0$CT))
+    A0<-data.frame(Samples=A0[,samplename],Targets=A0[,targetname],Ct=as.numeric(A0[,Ct]))
     A0<-A0[!is.na(A0$Samples),]
     return(as.data.frame(A0))
     })
