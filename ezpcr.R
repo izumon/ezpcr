@@ -17,6 +17,9 @@ library(readxl)
  #'
  #' @param dir folder/directory.
  #' @param skip skip rows.
+ #' @param samplename column of sample names.
+ #' @param targetname column of target names.
+ #' @param Ct column of Ct values.
  #' @return dataframe.
  #' @export
  #' @examples
