@@ -13,7 +13,7 @@ library(readxl)
 
  #' ezread
  #'
- #' This function reads datas exported by quantstudio.
+ #' This function reads data exported by QuantStudio.
  #'
  #' @param dir folder/directory.
  #' @param skip skip rows.
@@ -22,7 +22,7 @@ library(readxl)
  #' @examples
 
 #' @export
-ezread<-function(dir="./",skip=40)
+ezread<-function(dir="./",skip=40,samplename='Sample Name',targetname='Target Name',CT="CT")
 {
     files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")
     tables<-lapply(files,function(f)
@@ -39,7 +39,7 @@ ezread<-function(dir="./",skip=40)
         }
 
     A0<-subset(A0,subset=!is.na(Omit))
-    A0<-data.frame(Samples=A0$'Sample Name',Targets=A0$'Target Name',Ct=as.numeric(A0$CT))
+    A0<-data.frame(Samples=A0[,samplename],Targets=A0[,targetname],Ct=as.numeric(A0[,"CT"]))
     return(A0)
     })
     atable<-bind_rows(tables)
