@@ -96,7 +96,7 @@ library(dplyr)
 
 #ddCt
     bcons<-paste(grep(biologicalControl,x3$Samples,value=TRUE),collapse=",")
-    print(sprintf("%s was used as biological control",bcons))
+    cat(sprintf("\033[31m %s\033[m was used as biological control \r\n",unique(bcons)))
     x3[grepl(biologicalControl,x3$Samples),"Samples"]<-biologicalControl
     bcontrol<-tapply(x3$dCt,list(x3$Samples,x3$Targets),mean)
     bcontrol <- bcontrol[biologicalControl,]
@@ -152,7 +152,7 @@ ezGraph<-function(data,samplenames=NULL,dot=FALSE,linewidth=2,textSize=22,labelS
     }
         datas<-lapply(samplenames,function(x) {
             d<-data[grepl(x,data$Samples),]
-            print(sprintf("%s is renamed to %s",paste(unique(d$Samples),collapse=", "),x))
+            cat(sprintf("\033[31m%s\033[0m is renamed to \033[32m%s\033[0m\r\n",paste(unique(d$Samples),collapse=", "),x))
             d[grepl(x,d$Samples),"Samples"]<-x
             return(d)
         })#end lapply samplenames
