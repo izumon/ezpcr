@@ -3,8 +3,6 @@ library(dplyr)
 #グラフ用パッケージ
 library(ggplot2)
 
-#dplyrを使った方法
-#現状一番シンプル
 library(tidyverse)
 library(readxl)
 
@@ -14,14 +12,15 @@ library(readxl)
  #'
  #' @param dir folder/directory.
  #' @param skip skip rows.
- #' @param samplename column of sample names.
- #' @param targetname column of target names.
+ #' @param SMAPLENAME column of sample names.
+ #' @param TARGETNAME column of target names.
  #' @param Ct column of Ct values.
  #' @return dataframe.
 #' @export
-ezread<-function(dir="./",skip=40,samplename='Sample Name',targetname='Target Name',Ct="CT")
+ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Name',Ct="CT")
 {
     library(dplyr)
+    library(readxl)
     files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")
     print(sprintf("files %s have been found",paste(files,collapse=",")))
     tables<-lapply(files,function(f)
@@ -32,16 +31,17 @@ ezread<-function(dir="./",skip=40,samplename='Sample Name',targetname='Target Na
             A0<-read.csv(paste(dir,f,sep="/"),header=T,sep=",",skip=skip)
         }
         if(endsWith(f,"xlsx")){
-            A0<-read_xlsx(paste(dir,f,sep="/"),skip=40)
+            A0<-read_xlsx(paste(dir,f,sep="/"),skip=skip)
         }
         if(endsWith(f,"xls")){
-            A0<-read_xls(paste(dir,f,sep="/"),skip=40)
+            A0<-read_xls(paste(dir,f,sep="/"),skip=skip)
         }
         if(is.null(A0)){
             print(sprintf("%s was not found.",paste(dir,f,sep="/")))
         }
     #A0<-subset(A0,subset=!is.na(Omit))
-    A0<-data.frame(Samples=A0[,samplename],Targets=A0[,targetname],Ct=as.numeric(A0[,Ct]))
+    A0<-as.data.frame(A0)
+    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.numeric(as.vector(A0[,Ct])))
     A0<-A0[!is.na(A0$Samples),]
     return(as.data.frame(A0))
     })
@@ -61,7 +61,7 @@ ezread<-function(dir="./",skip=40,samplename='Sample Name',targetname='Target Na
  #' @param CtTh if Ct Value is more than CtTh, this value sets to CtMax.
  #' @return dataframe.
 #' @export
-ezcalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40)
+ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40)
 {
 library(dplyr)
     if(length( subset(df,subset=Targets==biologicalControl))==0)
@@ -227,13 +227,24 @@ ezGraph<-function(data,samplenames=NULL,dot=FALSE,linewidth=2,textSize=22,labelS
 
 
 #' @export
-lsamples<-function(df)
+lS<-function(df)
+{
+    return(unique(df$Samples))
+}
+#' @export
+lSamples<-function(df)
 {
     return(unique(df$Samples))
 }
 
 #' @export
-ltargets<-function(df)
+lT<-function(df)
+{
+    return(unique(df$Targets))
+}
+
+#' @export
+lTargets<-function(df)
 {
     return(unique(df$Targets))
 }
@@ -243,7 +254,6 @@ ext<-function(data,Sample="",Target="")
 {
     return(data[grepl(Sample,data$Samples)&grepl(Target,data$Targets),])
 }
-
 
 #' @export
 ezPng<-function(plots,plotname="plot",width=5,height=5)
@@ -275,6 +285,5 @@ ezSvg<-function(plots,plotname="plot",width=5,height=5)
     {
         ggsave(sprintf("./%s-%s.svg",plotname,w),plot=P[[w]],device=svglite,width=width,height=height,dpi=350,bg="white")
     }
-
 }
 
