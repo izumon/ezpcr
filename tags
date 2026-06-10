@@ -22,7 +22,7 @@ anonFunc2581144a0500	R/ezpcr.R	/^    PS<-lapply(genes,function(g)$/;"	f	function
 anonList2581144a0607	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	L	function:ezGraph.anonFunc2581144a0500
 anonVec2581144a0706	R/ezpcr.R	/^	scale_y_continuous(limit=c(0,max(data1$RQ)*1.05) , expand=c(0,0))+ #x軸の最小値を０に固/;"	c	function:ezGraph.anonFunc2581144a0500
 atable	R/ezpcr.R	/^    atable<-bind_rows(tables)$/;"	v	function:ezRead
-bcons	R/ezpcr.R	/^    bcons<-paste(grep(biologicalControl,x3$Samples,value=TRUE),collapse=",")$/;"	v	function:ezCalc
+bcons	R/ezpcr.R	/^    bcons<-paste(unique(grep(biologicalControl,x3$Samples,value=TRUE)),collapse=",")$/;"	v	function:ezCalc
 bcontrol	R/ezpcr.R	/^    bcontrol<-tapply(x3$dCt,list(x3$Samples,x3$Targets),mean)$/;"	v	function:ezCalc
 d	R/ezpcr.R	/^            d<-data[grepl(x,data$Samples),]$/;"	v	function:ezGraph.anonFunc2581144a0400
 data0	R/ezpcr.R	/^        data0<-bind_rows(datas)$/;"	v	function:ezGraph

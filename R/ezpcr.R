@@ -15,7 +15,7 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
     library(dplyr)
     library(readxl)
     files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")
-    print(sprintf("files %s have been found",paste(files,collapse=",")))
+    cat(sprintf("files \033[32m %s \033[0m have been found",paste(files,collapse=",")))
     tables<-lapply(files,function(f)
     {
         A0<-NULL
@@ -88,8 +88,8 @@ library(dplyr)
         ungroup()
 
 #ddCt
-    bcons<-paste(grep(biologicalControl,x3$Samples,value=TRUE),collapse=",")
-    cat(sprintf("\033[31m %s\033[m was used as biological control \r\n", unique(bcons)))
+    bcons<-paste(unique(grep(biologicalControl,x3$Samples,value=TRUE)),collapse=",")
+    cat(sprintf("Sample name \033[31m %s\033[m was used as biological control \r\n", bcons))
     x3[grepl(biologicalControl,x3$Samples),"Samples"]<-biologicalControl
     bcontrol<-tapply(x3$dCt,list(x3$Samples,x3$Targets),mean)
     bcontrol <- bcontrol[biologicalControl,]
