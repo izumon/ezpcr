@@ -1,10 +1,3 @@
-library(tidyverse)
-library(dplyr)
-#グラフ用パッケージ
-library(ggplot2)
-
-library(tidyverse)
-library(readxl)
 
  #' ezread
  #'
@@ -96,7 +89,7 @@ library(dplyr)
 
 #ddCt
     bcons<-paste(grep(biologicalControl,x3$Samples,value=TRUE),collapse=",")
-    cat(sprintf("\033[31m %s\033[m was used as biological control \r\n",unique(bcons)))
+    cat(sprintf("\033[31m %s\033[m was used as biological control \r\n", unique(bcons)))
     x3[grepl(biologicalControl,x3$Samples),"Samples"]<-biologicalControl
     bcontrol<-tapply(x3$dCt,list(x3$Samples,x3$Targets),mean)
     bcontrol <- bcontrol[biologicalControl,]
