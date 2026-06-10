@@ -1,52 +1,52 @@
 !_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
 !_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
-!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
-!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
-!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
-!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
-!_TAG_PROC_CWD	/home/codex/OneDrive/R/packages/ezpcr/	//
 !_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	5.9.0	//
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/codex/OneDrive/R/packages/ezpcr/	//
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+ezRead	R/ezpcr.R	/^ezRead<-function(dir=".\/",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Name',Ct="CT")$/;"	f
+files	R/ezpcr.R	/^    files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")$/;"	v	function:ezRead
+tables	R/ezpcr.R	/^    tables<-lapply(files,function(f)$/;"	v	function:ezRead
+anonFunc2581144a0100	R/ezpcr.R	/^    tables<-lapply(files,function(f)$/;"	f	function:ezRead
 A0	R/ezpcr.R	/^        A0<-NULL$/;"	v	function:ezRead.anonFunc2581144a0100
-Ct	R/ezpcr.R	/^    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.n/;"	g
-Ct	R/ezpcr.R	/^    df<-df %>% dplyr::mutate(Ct=as.numeric(Ct)) %>% dplyr::mutate(Ct=if_else(is.na(Ct) | Ct>CtTh/;"	v	function:ezCalc
-CtMean	R/ezpcr.R	/^    x3<-df%>% group_by(Samples,Targets) %>% dplyr::mutate(CtMean=mean(Ct,na.rm=TRUE)) %>% ungrou/;"	v	function:ezCalc
-PS	R/ezpcr.R	/^    PS<-lapply(genes,function(g)$/;"	v	function:ezGraph
 Samples	R/ezpcr.R	/^    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.n/;"	g
 Targets	R/ezpcr.R	/^    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.n/;"	g
-anonFunc2581144a0100	R/ezpcr.R	/^    tables<-lapply(files,function(f)$/;"	f	function:ezRead
-anonFunc2581144a0400	R/ezpcr.R	/^        datas<-lapply(samplenames,function(x) {$/;"	f	function:ezGraph
-anonFunc2581144a0500	R/ezpcr.R	/^    PS<-lapply(genes,function(g)$/;"	f	function:ezGraph
-anonList2581144a0607	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	L	function:ezGraph.anonFunc2581144a0500
-anonVec2581144a0706	R/ezpcr.R	/^	scale_y_continuous(limit=c(0,max(data1$RQ)*1.05) , expand=c(0,0))+ #x軸の最小値を０に固/;"	c	function:ezGraph.anonFunc2581144a0500
+Ct	R/ezpcr.R	/^    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.n/;"	g
 atable	R/ezpcr.R	/^    atable<-bind_rows(tables)$/;"	v	function:ezRead
-bcons	R/ezpcr.R	/^    bcons<-paste(unique(grep(biologicalControl,x3$Samples,value=TRUE)),collapse=",")$/;"	v	function:ezCalc
+ezCalc	R/ezpcr.R	/^ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40)$/;"	f
+Ct	R/ezpcr.R	/^    df<-df %>% dplyr::mutate(Ct=as.numeric(Ct)) %>% dplyr::mutate(Ct=if_else(is.na(Ct) | Ct>CtTh/;"	v	function:ezCalc
+x3	R/ezpcr.R	/^    x3<-df%>% group_by(Samples,Targets) %>% dplyr::mutate(CtMean=mean(Ct,na.rm=TRUE)) %>% ungrou/;"	v	function:ezCalc
+CtMean	R/ezpcr.R	/^    x3<-df%>% group_by(Samples,Targets) %>% dplyr::mutate(CtMean=mean(Ct,na.rm=TRUE)) %>% ungrou/;"	v	function:ezCalc
+icontrol	R/ezpcr.R	/^    icontrol <- tapply(x3$CtMean,list(x3$Samples,x3$Targets),mean)$/;"	v	function:ezCalc
+x	R/ezpcr.R	/^    for (x in names(icontrol))$/;"	v	function:ezCalc
+bcons	R/ezpcr.R	/^    bcons<-paste(unique(grep(biologicalControl,x3$Samples,value=TRUE)),collapse=", ")$/;"	v	function:ezCalc
 bcontrol	R/ezpcr.R	/^    bcontrol<-tapply(x3$dCt,list(x3$Samples,x3$Targets),mean)$/;"	v	function:ezCalc
+ezGraph	R/ezpcr.R	/^ezGraph<-function(data,samplenames=NULL,dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize/;"	f
+datas	R/ezpcr.R	/^        datas<-lapply(samplenames,function(x) {$/;"	v	function:ezGraph
+anonFunc2581144a0400	R/ezpcr.R	/^        datas<-lapply(samplenames,function(x) {$/;"	f	function:ezGraph
 d	R/ezpcr.R	/^            d<-data[grepl(x,data$Samples),]$/;"	v	function:ezGraph.anonFunc2581144a0400
 data0	R/ezpcr.R	/^        data0<-bind_rows(datas)$/;"	v	function:ezGraph
+PS	R/ezpcr.R	/^    PS<-lapply(genes,function(g)$/;"	v	function:ezGraph
+anonFunc2581144a0500	R/ezpcr.R	/^    PS<-lapply(genes,function(g)$/;"	f	function:ezGraph
 data1	R/ezpcr.R	/^            data1<-subset(data0,subset=Targets==g)$/;"	v	function:ezGraph.anonFunc2581144a0500
-datas	R/ezpcr.R	/^        datas<-lapply(samplenames,function(x) {$/;"	v	function:ezGraph
+p	R/ezpcr.R	/^	p <- ggplot(data = data1 , aes(x = Samples, y = RQ, fill= Samples)) + #aesで使用するパラ/;"	v	function:ezGraph.anonFunc2581144a0500
+anonList2581144a0607	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	L	function:ezGraph.anonFunc2581144a0500
+mult	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	n	list:ezGraph.anonFunc2581144a0500.anonList2581144a0607
+width	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	n	list:ezGraph.anonFunc2581144a0500.anonList2581144a0607
+size	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	n	list:ezGraph.anonFunc2581144a0500.anonList2581144a0607
+anonVec2581144a0706	R/ezpcr.R	/^	scale_y_continuous(limit=c(0,max(data1$RQ)*1.05) , expand=c(0,0))+ #x軸の最小値を０に固/;"	c	function:ezGraph.anonFunc2581144a0500
 expand	R/ezpcr.R	/^	scale_y_continuous(limit=c(0,max(data1$RQ)*1.05) , expand=c(0,0))+ #x軸の最小値を０に固/;"	n	vector:ezGraph.anonFunc2581144a0500.anonVec2581144a0706	constructor:c
-ext	R/ezpcr.R	/^ext<-function(data,Sample="",Target="")$/;"	f
-ezCalc	R/ezpcr.R	/^ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40)$/;"	f
-ezGraph	R/ezpcr.R	/^ezGraph<-function(data,samplenames=NULL,dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize/;"	f
-ezPng	R/ezpcr.R	/^ezPng<-function(plots,plotname="plot",width=5,height=5)$/;"	f
-ezRead	R/ezpcr.R	/^ezRead<-function(dir=".\/",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Name',Ct="CT")$/;"	f
-ezSvg	R/ezpcr.R	/^ezSvg<-function(plots,plotname="plot",width=5,height=5)$/;"	f
-files	R/ezpcr.R	/^    files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")$/;"	v	function:ezRead
-icontrol	R/ezpcr.R	/^    icontrol <- tapply(x3$CtMean,list(x3$Samples,x3$Targets),mean)$/;"	v	function:ezCalc
 lS	R/ezpcr.R	/^lS<-function(df)$/;"	f
 lSamples	R/ezpcr.R	/^lSamples<-function(df)$/;"	f
 lT	R/ezpcr.R	/^lT<-function(df)$/;"	f
 lTargets	R/ezpcr.R	/^lTargets<-function(df)$/;"	f
-mult	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	n	list:ezGraph.anonFunc2581144a0500.anonList2581144a0607
-p	R/ezpcr.R	/^	p <- ggplot(data = data1 , aes(x = Samples, y = RQ, fill= Samples)) + #aesで使用するパラ/;"	v	function:ezGraph.anonFunc2581144a0500
-size	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	n	list:ezGraph.anonFunc2581144a0500.anonList2581144a0607
-tables	R/ezpcr.R	/^    tables<-lapply(files,function(f)$/;"	v	function:ezRead
+ext	R/ezpcr.R	/^ext<-function(data,Sample="",Target="")$/;"	f
+ezPng	R/ezpcr.R	/^ezPng<-function(plots,plotname="plot",width=5,height=5)$/;"	f
 w	R/ezpcr.R	/^    for(w in names(P))$/;"	v	function:ezPng
+ezSvg	R/ezpcr.R	/^ezSvg<-function(plots,plotname="plot",width=5,height=5)$/;"	f
 w	R/ezpcr.R	/^    for(w in names(P))$/;"	v	function:ezSvg
-width	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	n	list:ezGraph.anonFunc2581144a0500.anonList2581144a0607
-x	R/ezpcr.R	/^    for (x in names(icontrol))$/;"	v	function:ezCalc
-x3	R/ezpcr.R	/^    x3<-df%>% group_by(Samples,Targets) %>% dplyr::mutate(CtMean=mean(Ct,na.rm=TRUE)) %>% ungrou/;"	v	function:ezCalc

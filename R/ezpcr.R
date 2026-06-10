@@ -88,7 +88,7 @@ library(dplyr)
         ungroup()
 
 #ddCt
-    bcons<-paste(unique(grep(biologicalControl,x3$Samples,value=TRUE)),collapse=",")
+    bcons<-paste(unique(grep(biologicalControl,x3$Samples,value=TRUE)),collapse=", ")
     cat(sprintf("Sample name \033[31m %s\033[m was used as biological control \r\n", bcons))
     x3[grepl(biologicalControl,x3$Samples),"Samples"]<-biologicalControl
     bcontrol<-tapply(x3$dCt,list(x3$Samples,x3$Targets),mean)
