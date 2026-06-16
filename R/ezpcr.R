@@ -133,6 +133,7 @@ library(dplyr)
  #' ezpcrで出力されたデータを棒グラフにする.
  #' @param data dataframe that contains Samples,Targets,RQ,Signif
  #' @param samplenames sample names that is contained in dataframe$Samples.
+ #' @param targets gene names that is contained in dataframe$Targets.
  #' @param dot TRUE/FALSE, indicationg whether the plot includes a dotplot .
  #' @param linewidth line thickness of axis lines and bar plot lines.
  #' @param textSize text size of tick labels.
@@ -149,11 +150,25 @@ library(dplyr)
  #' @examples p <- ezGraph(dataframe,samplenames=c("S1","S2","S3"),dot=FALSE,genes=c("gene1","gene2"),color=c("red","blue","white"))
  #' plot(p)
  #' @export
-ezGraph<-function(data,samplenames=NULL,dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signifs=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05)
+ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signifs=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05)
 {
     library(ggplot2)
     library(dplyr)
     library(ggpubr)
+    library(scales)
+
+
+custom_scale <- function(x) {
+      index_zero <- which(x == 0)
+      under_10k <- which(x<10**4)
+      label2 <- x
+      label <- scientific_format()(x)
+      label <- gsub( "e", " %*% 10^",label)
+      label <- gsub("\\^\\+", "\\^",label)
+      label[index_zero] <- "0"
+      label[under_10k] <- label2[under_10k]
+      parse(text=label)
+}
 
     if(is.null(genes)){
         genes<-unique(data$Targets)
@@ -175,6 +190,10 @@ ezGraph<-function(data,samplenames=NULL,dot=FALSE,linewidth=2,textSize=22,labelS
         samplenames <- gsub(newline,"\r\n",samplenames)
         data0$Samples<-factor(data0$Samples,levels=samplenames)
 
+        #グラフ化する遺伝子を選択
+        if(NROW(targets)!=0){
+            genes <- intersect(genes,targets)
+        }
     PS<-lapply(genes,function(g)
         {
             data1<-subset(data0,subset=Targets==g)
@@ -183,10 +202,17 @@ ezGraph<-function(data,samplenames=NULL,dot=FALSE,linewidth=2,textSize=22,labelS
     #plot ===
 	stat_summary(geom="bar", fun=mean, color="black", linewidth=linewidth,width=0.7 )+ #自動的に平均化した棒グラフを作ってくれる stat_summary
     #group化する際には barとerrorbarにpositoin = position_dodge(0.5)などを付けること
-	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linewidth)+ #エラーバーも自動で計算してくれる 標準誤差(mean_se)を使用 標準偏差は(mean_sdl,fun.args = list(mult=1)) あるいはggpubrのmean_sd
-	scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0))+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる
+	stat_summary(geom="errorbar",position="dodge",
+               fun = mean, 
+               fun.min = function(x) pmax(mean(x) - sd(x), 0), 
+               fun.max = function(x) mean(x) + sd(x),
+        width=0.5 ,size=linewidth)+ #エラーバーも自動で計算してくれる 標準誤差(mean_se)を使用 標準偏差は(mean_sdl,fun.args = list(mult=1)) あるいはggpubrのmean_sd
+#	scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0))+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる
+
+scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(n=3),label=custom_scale,n.breaks=3)+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる breaks+pretty_breaksでtick数を変更できる
 	ggtitle(g)+ 
 	theme_classic()+ #シンプルなデザインに変更
+    coord_cartesian(ylim = c(0, NA))+ #エラーバーが切れるのを防ぐ
 	theme(
         plot.title = element_text(hjust=0.5), #theme : 軸の太さなどの細かい点を指定
 	axis.title.x = element_blank(),
@@ -307,17 +333,42 @@ ezSvg<-function(plots,plotname="plot",width=5,height=5,dpi=350)
 #' checking outlier depends on Turkey's IQR(Interquartile Range) rule. 
 #' 四分位範囲による外れ値検定
 #' @param data frame which contains Samples,Targets and RQ.
+#' @param samples sample names.
+#' @param using RQ to evaluate outlier.
 #' @export
-check_outlier <- function( data ){
+check_outlier <- function( data,samples=c(),RQ=FALSE ){
     library(dplyr)
-    data <- data %>% group_by(Samples,Targets) %>% mutate(outlier = (function(rq){
+    data$Samples2<-data$Samples
+    if(NROW(samples)!=0)
+    {
+        for(w in samples)
+        {
+            print(sprintf("%s =  %s ",w, paste(unique(data[grepl(w,data$Samples),"Samples2"]),collapse=", ")))
+            data[grepl(w,data$Samples),"Samples2"]<-w
+        }
+    }
+    outlier<-function(rq){
+    }
+    if(RQ==TRUE){
+    data <- data %>% group_by(Samples2,Targets) %>% mutate(outlier = (function(rq){
             Q3 <- quantile(rq,0.75)
             Q1 <- quantile(rq,0.25)
             IQR <- Q3-Q1
-            lower <- Q1 -1.5*IQR
+            lower <- Q1 -1.5*IQR 
             upper <- Q3 + 1.5*IQR
             return(if_else((rq >= lower & rq<=upper),FALSE,TRUE))
               })(RQ)) 
+    }else{
+    data <- data %>% group_by(Samples2,Targets) %>% mutate(outlier = (function(rq){
+            Q3 <- quantile(rq,0.75)
+            Q1 <- quantile(rq,0.25)
+            IQR <- Q3-Q1
+            lower <- Q1 -1.5*IQR 
+            upper <- Q3 + 1.5*IQR
+            return(if_else((rq >= lower & rq<=upper),FALSE,TRUE))
+              })(dCt)) 
+    }
+    data$Samples2<-NULL
 
     return(as.data.frame(data))
 }
@@ -326,11 +377,13 @@ check_outlier <- function( data ){
 #' 四分位範囲による外れ値検定
 #' @param data frame which contains Samples,Targets and RQ.
 #' @export
-remove_outlier <- function(data){
+remove_outlier <- function(data,samples=c(),RQ=FALSE){
     if(!("outlier" %in% colnames(data)))
     {
-        data<-check_outlier(data)
+        data<-check_outlier(data,samples,RQ)
     }
+    print(as.data.frame(subset(data,subset=outlier==FALSE)))
+    print("removed")
     return(as.data.frame(subset(data,subset=outlier==FALSE)))
 }
 
@@ -339,37 +392,52 @@ remove_outlier <- function(data){
 #' @param data data frame which contains Samples,Targets and dCt. @param control control name which is contaied in column Samples.
 #' @param samples sample names which is contaied in column Samples.
 #' @export
-ttest <- function(data, control,samples){
+ttest <- function(data, control,samples=c()){
+    library(stats)
 
     con <- data[grepl(control,data$Samples),]
-    cat(sprintf("\033[33m %s \033[0m is used as control\r\n",paste(unique(con,collapse=","))))
+    cat(sprintf("\033[33m %s \033[0m is used as control\r\n",paste(unique(con$Samples,collapse=","))))
 
     if(NROW(samples)==1){ pair<-TRUE}else{pair<-FALSE}
 
+    if(NROW(samples)==0)
+    {
+        samples <- setdiff(unique(data$Samples),unique(con$Samples))
+    }
+
     #begin lapply ===========================
-    results<-lapply(data$Targets,function(tg){
+        results<-lapply(unique(data$Targets),function(tg){
+        print(tg)
         tdata <- subset(data,subset=Targets==tg)
         #get control data
-        con <- data[grepl(control,data$Samples),]
+        con <- tdata[grepl(control,tdata$Samples),]
+
+        tdata$compare<-tdata$Samples
         for(w in samples)
         {
-            tdata<-mutate( p_val=if_else(grepl(w,Samples),t.test(con$dCt,dCt)$p.value,1))
-            tdata<-mutate( p_adjust=if_else(grepl(w,Samples),pairwize.t.test(con$dCt,dCt,p.adjust.method="BH")$p.value,1))
+            tdata[grepl(w,tdata$Samples),"compare"]<-w
+            tdata$p_val<-1
+            compdata<-tdata[tdata$compare==w,"dCt"]
+            p_value <- t.test(con$dCt,compdata)$p.value
+            tdata<- mutate(tdata, p_val=if_else(compare == w, p_value, p_val))
         }
+        tdata$p_adjust <- p.adjust(tdata$p_val,method="BH")
+        return(tdata)
     })%>% bind_rows() #end lapply============
 
     # 列signif に * ** を追加
     if(pair==TRUE)
     {
-        results<-mutate( signif = if_else(p_val<0.05,"*",""),
+        results<-mutate(results, signif = if_else(p_val<0.05,"*",""),
             signif=if_else(p_val<0.01,"**",signif))
     }else
     {
-        results<-mutate( signif = if_else(p_adjust<0.05,"*",""),
+        results<-mutate(results, signif = if_else(p_adjust<0.05,"*",""),
             signif=if_else(p_adjust<0.01,"**",signif))
     }
 
-    return(result)
+    results$compare<-NULL
+    return(results)
 }
 
 
@@ -380,34 +448,49 @@ ttest <- function(data, control,samples){
 #' @param samples sample names which is contaied in column Samples.
 #' @export
 wilcoxtest <- function(data, control,samples){
+    library(stats)
 
     con <- data[grepl(control,data$Samples),]
-    cat(sprintf("\033[33m %s \033[0m is used as control\r\n",paste(unique(con,collapse=","))))
+    cat(sprintf("\033[33m %s \033[0m is used as control\r\n",paste(unique(con$Samples,collapse=","))))
 
     if(NROW(samples)==1){ pair<-TRUE}else{pair<-FALSE}
 
+    if(NROW(samples)==0)
+    {
+        samples <- setdiff(unique(data$Samples),unique(con$Samples))
+    }
+
     #begin lapply ===========================
-    results<-lapply(data$Targets,function(tg){
+        results<-lapply(unique(data$Targets),function(tg){
+        print(tg)
         tdata <- subset(data,subset=Targets==tg)
         #get control data
-        con <- data[grepl(control,data$Samples),]
+        con <- tdata[grepl(control,tdata$Samples),]
+
+        tdata$compare<-tdata$Samples
         for(w in samples)
         {
-            tdata<-mutate( p_val=if_else(grepl(w,Samples),wilcox.test(con$dCt,dCt)$p.value,1))
-            tdata<-mutate( p_adjust=if_else(grepl(w,Samples),pairwize.wilcox.test(con$dCt,dCt,p.adjust.method="BH")$p.value,1))
+            tdata[grepl(w,tdata$Samples),"compare"]<-w
+            tdata$p_val<-1
+            compdata<-tdata[tdata$compare==w,"dCt"]
+            p_value <- t.test(con$dCt,compdata)$p.value
+            tdata<- mutate(tdata, p_val=if_else(compare == w, p_value, p_val))
         }
+        tdata$p_adjust <- p.adjust(tdata$p_val,method="BH")
+        return(tdata)
     })%>% bind_rows() #end lapply============
 
     # 列signif に * ** を追加
     if(pair==TRUE)
     {
-        results<-mutate( signif = if_else(p_val<0.05,"*",""),
+        results<-mutate(results, signif = if_else(p_val<0.05,"*",""),
             signif=if_else(p_val<0.01,"**",signif))
     }else
     {
-        results<-mutate( signif = if_else(p_adjust<0.05,"*",""),
+        results<-mutate(results, signif = if_else(p_adjust<0.05,"*",""),
             signif=if_else(p_adjust<0.01,"**",signif))
     }
 
-    return(result)
+    results$compare<-NULL
+    return(results)
 }
