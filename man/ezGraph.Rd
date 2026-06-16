@@ -17,10 +17,13 @@ ezGraph(
   signifs = list(),
   color = c(),
   dotsize = 3,
-  newline = " "
+  newline = " ",
+  y_extension = 1.05
 )
 }
 \arguments{
+\item{data}{dataframe that contains Samples,Targets,RQ,Signif}
+
 \item{samplenames}{sample names that is contained in dataframe$Samples.}
 
 \item{dot}{TRUE/FALSE, indicationg whether the plot includes a dotplot .}
@@ -42,12 +45,15 @@ ezGraph(
 \item{dotsize}{Size of dots. if dot option is TRUE, this option is applied to dot plot.}
 
 \item{newline}{line feed characters. the characters separate sample name and add new line character.}
+
+\item{y_extension}{scale that extends max value of y axis.}
 }
 \value{
 list(plot); function names(returned value) returns gene names.
 }
 \description{
-This function creates plots.
+This function creates bar plots.
+ezpcrで出力されたデータを棒グラフにする.
 }
 \examples{
 p <- ezGraph(dataframe,samplenames=c("S1","S2","S3"),dot=FALSE,genes=c("gene1","gene2"),color=c("red","blue","white"))
