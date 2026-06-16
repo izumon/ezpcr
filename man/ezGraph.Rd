@@ -7,6 +7,7 @@
 ezGraph(
   data,
   samplenames = NULL,
+  targets = c(),
   dot = FALSE,
   linewidth = 2,
   textSize = 22,
@@ -25,6 +26,8 @@ ezGraph(
 \item{data}{dataframe that contains Samples,Targets,RQ,Signif}
 
 \item{samplenames}{sample names that is contained in dataframe$Samples.}
+
+\item{targets}{gene names that is contained in dataframe$Targets.}
 
 \item{dot}{TRUE/FALSE, indicationg whether the plot includes a dotplot .}
 
