@@ -255,7 +255,7 @@ scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks 
     #signifがすでに入力されているとき有意差を表示
     if("signif" %in% colnames(data))
     {
-        p<-last_plot()+stat_summary(fun="max", geom="text",aes(label=signif),vjust=0.5,size=textSize*1.5,color="black",fontface="bold")
+        p<-last_plot()+stat_summary(fun="max", geom="text",aes(label=signif),vjust=0.5,size=textSize*1.25,color="black",fontface="bold")
     }
 
     return(p)
