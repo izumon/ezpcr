@@ -71,7 +71,7 @@ library(dplyr)
 
 #calc internal control mean
     icontrol <- tapply(x3$CtMean,list(x3$Samples,x3$Targets),mean)
-    icontrol<- icontrol[,internalControl]
+    icontrol<- icontrol[,grepl(internalControl,colnames(icontrol))] %>% mean()
 
 #dCt
     x3$dCt<-x3$Ct
