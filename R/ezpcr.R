@@ -67,7 +67,7 @@ library(dplyr)
     {
         print(sprintf(" %s is not containd in this data!"))
     }
-    if(!("ID" %in colnames(df))){df$ID<-1}
+    if(!("ID" %in% colnames(df))){df$ID<-1}
 
 #Ctを数値化
     df<-df %>% dplyr::mutate(Ct=as.numeric(Ct)) %>% dplyr::mutate(Ct=if_else(is.na(Ct) | Ct>CtTh,CtMax,Ct))
