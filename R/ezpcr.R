@@ -17,6 +17,7 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
     library(readxl)
     files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")
     cat(sprintf("files \033[32m %s \033[0m have been found",paste(files,collapse=",")))
+    counter<-1
     tables<-lapply(files,function(f)
     {
         A0<-NULL
@@ -37,8 +38,12 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
     A0<-as.data.frame(A0)
     A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.numeric(as.vector(A0[,Ct])))
     A0<-A0[!is.na(A0$Samples),]
+    A0$ID<-counter
+
+    counter<-counter+1
+
     return(as.data.frame(A0))
-    })
+    })#end lapply
     atable<-bind_rows(tables)
     return(atable)
 }#end function ezread
@@ -53,9 +58,10 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
  #' @param internalControl a gene of internal-control.
  #' @param CtMax if Ct Value is undetermined(NA), this value sets to CtMax.
  #' @param CtTh if Ct Value is more than CtTh, this value sets to CtMax.
+ #' @param CtMean and dCt calculation separated by Sample,Target,ID.
  #' @return dataframe.
 #' @export
-ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40)
+ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE)
 {
 library(dplyr)
     if(length( subset(df,subset=Targets==biologicalControl))==0)
@@ -67,20 +73,26 @@ library(dplyr)
     df<-df %>% dplyr::mutate(Ct=as.numeric(Ct)) %>% dplyr::mutate(Ct=if_else(is.na(Ct) | Ct>CtTh,CtMax,Ct))
 
 #CtMean
-    x3<-df%>% group_by(Samples,Targets) %>% dplyr::mutate(CtMean=mean(Ct,na.rm=TRUE)) %>% ungroup
+    x3<-df%>% group_by(Samples,Targets,ID) %>% dplyr::mutate(CtMean=mean(Ct,na.rm=TRUE)) %>% ungroup
+
+#IDを付加
+    x3$Samples2<-paste(x3$Samples,x3$ID,sep="::")
 
 #calc internal control mean
-    icontrol <- tapply(x3$CtMean,list(x3$Samples,x3$Targets),mean)
+    icontrol <- tapply(x3$CtMean,list(x3$Samples2,x3$Targets),mean)
     icontrol<- icontrol[,grepl(internalControl,colnames(icontrol))] %>% mean()
 
 #dCt
-    x3$dCt<-x3$Ct
+    x3$dCt<-x3$CtMean
     for (x in names(icontrol))
     {
-           x3<-x3%>%mutate(dCt=if_else(Samples==x,dCt-icontrol[x],dCt))
+           x3<-x3%>%mutate(dCt=if_else(Samples2==x,dCt-icontrol[x],dCt))
            #filt<-which(x3$Samples==x,);x3[filt,"dCt"]<-x3[filt,"dCt"]-icontrol[x] #で最初に変更する行を抽出するか
            #x3[x3$Samples==x,] %<>% mutate(dCt=dCt-icontrol[x]) #magrittrを使ったパイプの方がスマートでは
     }
+
+#IDを除去
+    x3$Samples2<-NULL
 
 #dCtMean
     x3<-x3%>%
