@@ -11,69 +11,15 @@
 !_TAG_PROGRAM_VERSION	5.9.0	//
 A0	R/ezpcr.R	/^        A0<-NULL$/;"	v	function:ezRead.anonFunc2581144a0100
 Ct	R/ezpcr.R	/^    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.n/;"	g
-Ct	R/ezpcr.R	/^    df<-df %>% dplyr::mutate(Ct=as.numeric(Ct)) %>% dplyr::mutate(Ct=if_else(is.na(Ct) | Ct>CtTh/;"	v	function:ezCalc
-CtMean	R/ezpcr.R	/^    x3<-df%>% group_by(Samples,Targets,ID) %>% dplyr::mutate(CtMean=mean(Ct ,na.rm=TRUE)) %>% un/;"	v	function:ezCalc
 ID	R/ezpcr.R	/^    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.n/;"	g
-IQR	R/ezpcr.R	/^            IQR <- Q3-Q1$/;"	v	function:check_outlier.anonFunc2581144a0900
-PS	R/ezpcr.R	/^    PS<-lapply(genes,function(g)$/;"	v	function:ezGraph
-Q1	R/ezpcr.R	/^            Q1 <- quantile(rq,0.25)$/;"	v	function:check_outlier.anonFunc2581144a0900
-Q3	R/ezpcr.R	/^            Q3 <- quantile(rq,0.75)$/;"	v	function:check_outlier.anonFunc2581144a0900
 Samples	R/ezpcr.R	/^    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.n/;"	g
 Targets	R/ezpcr.R	/^    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.n/;"	g
 anonFunc2581144a0100	R/ezpcr.R	/^    tables<-lapply(files,function(f)$/;"	f	function:ezRead
-anonFunc2581144a0400	R/ezpcr.R	/^        datas<-lapply(samplenames,function(x) {$/;"	f	function:ezGraph
-anonFunc2581144a0500	R/ezpcr.R	/^    PS<-lapply(genes,function(g)$/;"	f	function:ezGraph
-anonFunc2581144a0900	R/ezpcr.R	/^    data <- data %>% group_by(Samples,Targets) %>% mutate(outlier = (function(rq){$/;"	f	function:check_outlier
-anonFunc2581144a0a00	R/ezpcr.R	/^    results<-lapply(data$Targets,function(tg){$/;"	f	function:ttest
-anonFunc2581144a0b00	R/ezpcr.R	/^    results<-lapply(data$Targets,function(tg){$/;"	f	function:wilcoxtest
-anonList2581144a0607	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	L	function:ezGraph.anonFunc2581144a0500
-anonVec2581144a0706	R/ezpcr.R	/^	scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0))+ #x軸の最小値を０/;"	c	function:ezGraph.anonFunc2581144a0500
 atable	R/ezpcr.R	/^    atable<-bind_rows(tables)$/;"	v	function:ezRead
-bcons	R/ezpcr.R	/^    bcons<-paste(unique(grep(biologicalControl,x3$Samples,value=TRUE)),collapse=", ")$/;"	v	function:ezCalc
-bcontrol	R/ezpcr.R	/^    bcontrol<-tapply(x3$dCt,list(x3$Samples,x3$Targets),mean)$/;"	v	function:ezCalc
-check_outlier	R/ezpcr.R	/^check_outlier <- function( data ){$/;"	f
-con	R/ezpcr.R	/^        con <- data[grepl(control,data$Samples),]$/;"	v	function:ttest.anonFunc2581144a0a00
-con	R/ezpcr.R	/^        con <- data[grepl(control,data$Samples),]$/;"	v	function:wilcoxtest.anonFunc2581144a0b00
-con	R/ezpcr.R	/^    con <- data[grepl(control,data$Samples),]$/;"	v	function:ttest
-con	R/ezpcr.R	/^    con <- data[grepl(control,data$Samples),]$/;"	v	function:wilcoxtest
+color	R/ezpcr.R	/^        print(sprintf("color=%s, samples=%s",NROW(color),NROW(unique(data1$Samples))))$/;"	v	function:ezCalc
 counter	R/ezpcr.R	/^    counter<-1$/;"	v	function:ezRead
 counter	R/ezpcr.R	/^    counter<-counter+1$/;"	v	function:ezRead.anonFunc2581144a0100
-d	R/ezpcr.R	/^            d<-data[grepl(x,data$Samples),]$/;"	v	function:ezGraph.anonFunc2581144a0400
-data0	R/ezpcr.R	/^        data0<-bind_rows(datas)$/;"	v	function:ezGraph
-data1	R/ezpcr.R	/^            data1<-subset(data0,subset=Targets==g)$/;"	v	function:ezGraph.anonFunc2581144a0500
-datas	R/ezpcr.R	/^        datas<-lapply(samplenames,function(x) {$/;"	v	function:ezGraph
-expand	R/ezpcr.R	/^	scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0))+ #x軸の最小値を０/;"	n	vector:ezGraph.anonFunc2581144a0500.anonVec2581144a0706	constructor:c
-ext	R/ezpcr.R	/^ext<-function(data,Sample="",Target="")$/;"	f
 ezCalc	R/ezpcr.R	/^ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE)$/;"	f
-ezGraph	R/ezpcr.R	/^ezGraph<-function(data,samplenames=NULL,dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize/;"	f
-ezPng	R/ezpcr.R	/^ezPng<-function(plots,plotname="plot",width=5,height=5,dpi=350)$/;"	f
 ezRead	R/ezpcr.R	/^ezRead<-function(dir=".\/",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Name',Ct="CT")$/;"	f
-ezSvg	R/ezpcr.R	/^ezSvg<-function(plots,plotname="plot",width=5,height=5,dpi=350)$/;"	f
 files	R/ezpcr.R	/^    files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")$/;"	v	function:ezRead
-icontrol	R/ezpcr.R	/^    icontrol <- tapply(x3$CtMean,list(x3$Samples2,x3$Targets),mean)$/;"	v	function:ezCalc
-lS	R/ezpcr.R	/^lS<-function(df)$/;"	f
-lSamples	R/ezpcr.R	/^lSamples<-function(df)$/;"	f
-lT	R/ezpcr.R	/^lT<-function(df)$/;"	f
-lTargets	R/ezpcr.R	/^lTargets<-function(df)$/;"	f
-lower	R/ezpcr.R	/^            lower <- Q1 -1.5*IQR$/;"	v	function:check_outlier.anonFunc2581144a0900
-mult	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	n	list:ezGraph.anonFunc2581144a0500.anonList2581144a0607
-p	R/ezpcr.R	/^	p <- ggplot(data = data1 , aes(x = Samples, y = RQ, fill= Samples)) + #aesで使用するパラ/;"	v	function:ezGraph.anonFunc2581144a0500
-pair	R/ezpcr.R	/^    if(NROW(samples)==1){ pair<-TRUE}else{pair<-FALSE}$/;"	v	function:ttest
-pair	R/ezpcr.R	/^    if(NROW(samples)==1){ pair<-TRUE}else{pair<-FALSE}$/;"	v	function:wilcoxtest
-remove_outlier	R/ezpcr.R	/^remove_outlier <- function(data){$/;"	f
-results	R/ezpcr.R	/^    results<-lapply(data$Targets,function(tg){$/;"	v	function:ttest
-results	R/ezpcr.R	/^    results<-lapply(data$Targets,function(tg){$/;"	v	function:wilcoxtest
-size	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	n	list:ezGraph.anonFunc2581144a0500.anonList2581144a0607
 tables	R/ezpcr.R	/^    tables<-lapply(files,function(f)$/;"	v	function:ezRead
-tdata	R/ezpcr.R	/^        tdata <- subset(data,subset=Targets==tg)$/;"	v	function:ttest.anonFunc2581144a0a00
-tdata	R/ezpcr.R	/^        tdata <- subset(data,subset=Targets==tg)$/;"	v	function:wilcoxtest.anonFunc2581144a0b00
-ttest	R/ezpcr.R	/^ttest <- function(data, control,samples){$/;"	f
-upper	R/ezpcr.R	/^            upper <- Q3 + 1.5*IQR$/;"	v	function:check_outlier.anonFunc2581144a0900
-w	R/ezpcr.R	/^        for(w in samples)$/;"	v	function:ttest.anonFunc2581144a0a00
-w	R/ezpcr.R	/^        for(w in samples)$/;"	v	function:wilcoxtest.anonFunc2581144a0b00
-w	R/ezpcr.R	/^    for(w in names(P))$/;"	v	function:ezPng
-w	R/ezpcr.R	/^    for(w in names(P))$/;"	v	function:ezSvg
-width	R/ezpcr.R	/^	stat_summary(geom="errorbar",fun.data=mean_sdl,fun.args = list(mult = 1), width=0.5 ,size=linew/;"	n	list:ezGraph.anonFunc2581144a0500.anonList2581144a0607
-wilcoxtest	R/ezpcr.R	/^wilcoxtest <- function(data, control,samples){$/;"	f
-x	R/ezpcr.R	/^    for (x in names(icontrol))$/;"	v	function:ezCalc
-x3	R/ezpcr.R	/^    x3<-df%>% group_by(Samples,Targets,ID) %>% dplyr::mutate(CtMean=mean(Ct ,na.rm=TRUE)) %>% un/;"	v	function:ezCalc

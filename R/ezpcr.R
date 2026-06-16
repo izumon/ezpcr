@@ -67,6 +67,7 @@ library(dplyr)
     {
         print(sprintf(" %s is not containd in this data!"))
     }
+    if(!("ID" %in colnames(df))){df$ID<-1}
 
 #Ctを数値化
     df<-df %>% dplyr::mutate(Ct=as.numeric(Ct)) %>% dplyr::mutate(Ct=if_else(is.na(Ct) | Ct>CtTh,CtMax,Ct))
@@ -75,7 +76,7 @@ library(dplyr)
     x3<-df%>% group_by(Samples,Targets,ID) %>% dplyr::mutate(CtMean=mean(Ct ,na.rm=TRUE)) %>% ungroup
 
 #IDを付加
-    x3$Samples2<-paste(x3$Samples,x3$ID,sep="::")
+    x3$Samples2<-paste(x3$Samples,x3$ID,sep="---")
 
 #calc internal control mean
     icontrol <- tapply(x3$CtMean,list(x3$Samples2,x3$Targets),mean)
