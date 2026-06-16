@@ -17,9 +17,9 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
     library(readxl)
     files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")
     cat(sprintf("files \033[32m %s \033[0m have been found",paste(files,collapse=",")))
-    counter<-1
     tables<-lapply(files,function(f)
     {
+        counter<-grep(f,files)
         A0<-NULL
         if(endsWith(f,"txt")||endsWith(f,".csv"))
         {
@@ -38,8 +38,6 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
     A0<-as.data.frame(A0)
     A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.numeric(as.vector(A0[,Ct])),ID=counter)
     A0<-A0[!is.na(A0$Samples),]
-
-    counter<-counter+1
 
     return(as.data.frame(A0))
     })#end lapply
@@ -67,26 +65,29 @@ library(dplyr)
     {
         print(sprintf(" %s is not containd in this data!"))
     }
-    if(!("ID" %in% colnames(df))){df$ID<-1}
+    if(!("ID" %in% colnames(df))){df$ID<-0}
 
 #Ctを数値化
     df<-df %>% dplyr::mutate(Ct=as.numeric(Ct)) %>% dplyr::mutate(Ct=if_else(is.na(Ct) | Ct>CtTh,CtMax,Ct))
 
-#CtMean
-    x3<-df%>% group_by(Samples,Targets,ID) %>% dplyr::mutate(CtMean=mean(Ct ,na.rm=TRUE)) %>% ungroup
+#internal controlを保存
+    df$internalControl<-internalControl
 
 #IDを付加
-    x3$Samples2<-paste(x3$Samples,x3$ID,sep="---")
+    df$Samples2<-paste(df$Samples,df$ID,sep="---")
+
+#CtMean
+    x3<-df%>% group_by(Samples2,Targets,ID) %>% dplyr::mutate(CtMean=mean(Ct ,na.rm=TRUE)) %>% ungroup
 
 #calc internal control mean
     icontrol <- tapply(x3$CtMean,list(x3$Samples2,x3$Targets),mean)
-    icontrol<- icontrol[,grepl(internalControl,colnames(icontrol))] %>% mean()
+    icontrol<- icontrol[,grepl(internalControl,colnames(icontrol))] %>% apply(1,mean)
 
 #dCt
-    x3$dCt<-x3$CtMean
+    x3$dCt<-x3$Ct
     for (x in names(icontrol))
     {
-           x3<-x3%>%mutate(dCt=if_else(Samples2==x,dCt-icontrol[x],dCt))
+           x3<-x3%>%mutate(dCt=if_else(Samples2 == x, dCt-icontrol[x], dCt))
            #filt<-which(x3$Samples==x,);x3[filt,"dCt"]<-x3[filt,"dCt"]-icontrol[x] #で最初に変更する行を抽出するか
            #x3[x3$Samples==x,] %<>% mutate(dCt=dCt-icontrol[x]) #magrittrを使ったパイプの方がスマートでは
     }
@@ -100,16 +101,19 @@ library(dplyr)
         mutate(dCtMean=mean(dCt))%>% 
         ungroup()
 
+#biological controlを保存
+    x3$biologicalControl <- biologicalControl
+
 #ddCt
     bcons<-paste(unique(grep(biologicalControl,x3$Samples,value=TRUE)),collapse=", ")
     cat(sprintf("Sample name \033[31m %s\033[m was used as biological control \r\n", bcons))
     x3[grepl(biologicalControl,x3$Samples),"Samples"]<-biologicalControl
-    bcontrol<-tapply(x3$dCt,list(x3$Samples,x3$Targets),mean)
+    bcontrol<-tapply(x3$dCt, list(x3$Samples,x3$Targets),mean)
     bcontrol <- bcontrol[biologicalControl,]
-    x3$ddCt<-x3$dCtMean
+    x3$ddCt<-x3$dCt
     for(x in names(bcontrol))
     {
-        x3<-x3 %>% transform(ddCt=if_else(Targets==x,dCt-bcontrol[x],ddCt))
+        x3<-x3 %>% transform(ddCt=if_else(Targets==x, dCt-bcontrol[x],ddCt))
     }
 
 #ddCtMean
@@ -117,11 +121,10 @@ library(dplyr)
     x3<-x3%>% mutate(RQ=2^(-ddCt))
     x3<-x3%>% mutate(RQMEAN=mean(RQ)) %>% ungroup() #%>% as.data.frame()
 
-    x3<-x3%>% mutate(rdCtMean=-dCtMean)
+    #x3<-x3%>% mutate(rdCtMean=-dCtMean)
     return(as.data.frame(x3))
 
 }#end function ezcalc
-
 
 
  #' ezgraph
@@ -315,6 +318,8 @@ check_outlier <- function( data ){
             upper <- Q3 + 1.5*IQR
             return(if_else((rq >= lower & rq<=upper),FALSE,TRUE))
               })(RQ)) 
+
+    return(as.data.frame(data))
 }
 
 #' removing outlier depends on Turkey's IQR(Interquartile Range) rule. 
@@ -326,7 +331,7 @@ remove_outlier <- function(data){
     {
         data<-check_outlier(data)
     }
-    return(subset(data,subset=outlier==FALSE))
+    return(as.data.frame(subset(data,subset=outlier==FALSE)))
 }
 
 #' t.test 
