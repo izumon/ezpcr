@@ -36,9 +36,8 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
         }
     #A0<-subset(A0,subset=!is.na(Omit))
     A0<-as.data.frame(A0)
-    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.numeric(as.vector(A0[,Ct])))
+    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.numeric(as.vector(A0[,Ct])),ID=counter)
     A0<-A0[!is.na(A0$Samples),]
-    A0$ID<-counter
 
     counter<-counter+1
 
@@ -73,7 +72,7 @@ library(dplyr)
     df<-df %>% dplyr::mutate(Ct=as.numeric(Ct)) %>% dplyr::mutate(Ct=if_else(is.na(Ct) | Ct>CtTh,CtMax,Ct))
 
 #CtMean
-    x3<-df%>% group_by(Samples,Targets,ID) %>% dplyr::mutate(CtMean=mean(Ct,na.rm=TRUE)) %>% ungroup
+    x3<-df%>% group_by(Samples,Targets,ID) %>% dplyr::mutate(CtMean=mean(Ct ,na.rm=TRUE)) %>% ungroup
 
 #IDを付加
     x3$Samples2<-paste(x3$Samples,x3$ID,sep="::")
