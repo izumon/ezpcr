@@ -239,6 +239,7 @@ scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks 
     if(length(signifs)!=0){
     #add text ===
   p<-last_plot()+geom_signif(
+    aes(dCt),
     comparisons = list(signifs),  # 比較するペア
     test = "wilcox.test",                  # t検定を使用
     map_signif_level = TRUE           # p<0.05,* / p<0.01,** / p<0.001,*** に自動変換
@@ -253,9 +254,9 @@ scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks 
     }
 
     #signifがすでに入力されているとき有意差を表示
-    if("signif" %in% colnames(data))
+    if(("signif" %in% colnames(data)) && length(signifs)==0)
     {
-        p<-last_plot()+stat_summary(fun="max", geom="text",aes(label=signif),vjust=0.5,size=textSize*1.25,color="black",fontface="bold")
+        p<-last_plot()+stat_summary(fun="max", geom="text",aes(label=signif),vjust=0.5,size=textSize*1.1,color="black",fontface="bold")
     }
 
     return(p)
@@ -395,6 +396,11 @@ remove_outlier <- function(data,samples=c(),RQ=FALSE){
 ttest <- function(data, control,samples=c()){
     library(stats)
 
+    if(!("p_value" %in% colnames(data)))
+    {
+            data$p_val<-1
+            data$p_adjust<-1
+    }
     con <- data[grepl(control,data$Samples),]
     cat(sprintf("\033[33m %s \033[0m is used as control\r\n",paste(unique(con$Samples,collapse=","))))
 
@@ -411,12 +417,10 @@ ttest <- function(data, control,samples=c()){
         tdata <- subset(data,subset=Targets==tg)
         #get control data
         con <- tdata[grepl(control,tdata$Samples),]
-
         tdata$compare<-tdata$Samples
         for(w in samples)
         {
             tdata[grepl(w,tdata$Samples),"compare"]<-w
-            tdata$p_val<-1
             compdata<-tdata[tdata$compare==w,"dCt"]
             p_value <- t.test(con$dCt,compdata)$p.value
             tdata<- mutate(tdata, p_val=if_else(compare == w, p_value, p_val))
@@ -450,6 +454,12 @@ ttest <- function(data, control,samples=c()){
 wilcoxtest <- function(data, control,samples){
     library(stats)
 
+    if(!("p_value" %in% colnames(data)))
+    {
+            data$p_val<-1
+            data$p_adjust<-1
+    }
+
     con <- data[grepl(control,data$Samples),]
     cat(sprintf("\033[33m %s \033[0m is used as control\r\n",paste(unique(con$Samples,collapse=","))))
 
@@ -471,7 +481,7 @@ wilcoxtest <- function(data, control,samples){
         for(w in samples)
         {
             tdata[grepl(w,tdata$Samples),"compare"]<-w
-            tdata$p_val<-1
+
             compdata<-tdata[tdata$compare==w,"dCt"]
             p_value <- t.test(con$dCt,compdata)$p.value
             tdata<- mutate(tdata, p_val=if_else(compare == w, p_value, p_val))
@@ -494,3 +504,71 @@ wilcoxtest <- function(data, control,samples){
     results$compare<-NULL
     return(results)
 }
+
+#' join 
+#' join two datas that are get from ezpcr::ezCalc.
+#' ezpcrから得られたdataframeのdata1とdata2を結合する。
+#' @export
+ezJoin<-function(data1,data2)
+{
+    retunr(rbind(data1,data2))
+}
+
+#' heatmap 
+#' heatmapを作成する。
+#' @param data data frame which contains Samples,Targets and dCt.
+#' @param samples sample names which is contaied in column Samples.
+#' @param titlename title name of plot
+#' @param legend add heat map legend
+#' @param flip turn the data matrix.
+#' @export
+ezHeatmap<-function(data,samplenames=c(),titlename="",legend=FALSE,flip=FALSE)
+{
+    if(!("ComplexHeatmap" %in% installed.packages()))
+    {
+        install.packages(c("heatmap3","viridisLite","reshape2","RColorBrewer","gpar"))
+    }
+    if(!("genefilter" %in% installed.packages()))
+    {
+        BiocManager::install("genefilter")
+    }
+    if(NROW(samplenames) >0)
+    {
+        for(w in samplenames)
+        {
+            data[grepl(w,data$Samples),"Samples"]<-w
+        }
+    }
+    library(heatmap3)
+    library(genefilter)
+    library(RColorBrewer)
+    library(viridisLite)
+    library(ComplexHeatmap)
+    library(grid)
+
+    mat<-tapply(data$dCt,list(data$Targets,data$Samples),mean)
+    mat.z<-genescale(-mat,1,method="Z")
+    if(flip==TRUE){mat.z<-t(mat.z)}
+	P<-ComplexHeatmap::Heatmap(
+	mat.z, #matrix 形式の data
+	gap = unit(20, "mm"), #グループ間の境目 
+	show_heatmap_legend = legend, #legendの非表示
+	clustering_method_rows = "ward.D2",  #行のクラスタリングメソッド
+	clustering_method_columns ="ward.D2", #列のクラスタリングメソッド
+	column_names_gp = grid::gpar(fontsize = 18), #列ラベルの間隔
+    column_names_rot = 90, #角度
+	row_names_gp = grid::gpar(fontsize = 18), #行ラベルの間隔
+	row_dend_width = unit(35, "mm"), #行デンドログラムの長さ
+    row_dend_gp = gpar(lwd = 1, col = "black"), #デンドログラムのライン幅
+    row_names_rot = 0,
+	column_dend_height = unit(35,"mm"), #列デンドログラムの長さ
+    column_dend_gp = gpar(lwd = 1, col = "black"), #デンドログラムのライン幅
+	column_title = titlename, #列のタイトル名
+	column_title_gp=grid::gpar(fontsize=18), #列のタイトルのフォントサイズ
+
+   row_names_max_width = unit(20, "cm"),#行のマージン
+    name = "Z-score" #legend title
+	)
+    return(P)
+}
+

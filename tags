@@ -16,6 +16,7 @@ CtMean	R/ezpcr.R	/^    x3<-df%>% group_by(Samples2,Targets,ID) %>% dplyr::mutate
 ID	R/ezpcr.R	/^    A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.n/;"	g
 IQR	R/ezpcr.R	/^            IQR <- Q3-Q1$/;"	v	function:check_outlier.anonFunc2581144a0b00
 IQR	R/ezpcr.R	/^            IQR <- Q3-Q1$/;"	v	function:check_outlier.anonFunc2581144a0c00
+P	R/ezpcr.R	/^	P<-ComplexHeatmap::Heatmap($/;"	v	function:ezHeatmap
 PS	R/ezpcr.R	/^    PS<-lapply(genes,function(g)$/;"	v	function:ezGraph
 Q1	R/ezpcr.R	/^            Q1 <- quantile(rq,0.25)$/;"	v	function:check_outlier.anonFunc2581144a0b00
 Q1	R/ezpcr.R	/^            Q1 <- quantile(rq,0.25)$/;"	v	function:check_outlier.anonFunc2581144a0c00
@@ -38,6 +39,14 @@ bcons	R/ezpcr.R	/^    bcons<-paste(unique(grep(biologicalControl,x3$Samples,valu
 bcontrol	R/ezpcr.R	/^    bcontrol<-tapply(x3$dCt, list(x3$Samples,x3$Targets),mean)$/;"	v	function:ezCalc
 breaks	R/ezpcr.R	/^scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(/;"	n	nameattr:ezGraph.anonFunc2581144a0500.anonVec2581144a0806.expand
 check_outlier	R/ezpcr.R	/^check_outlier <- function( data,samples=c(),RQ=FALSE ){$/;"	f
+clustering_method_columns	R/ezpcr.R	/^	clustering_method_columns ="ward.D2", #列のクラスタリングメソッド$/;"	v	function:ezHeatmap
+clustering_method_rows	R/ezpcr.R	/^	clustering_method_rows = "ward.D2",  #行のクラスタリングメソッド$/;"	v	function:ezHeatmap
+column_dend_gp	R/ezpcr.R	/^    column_dend_gp = gpar(lwd = 1, col = "black"), #デンドログラムのライン幅$/;"	v	function:ezHeatmap
+column_dend_height	R/ezpcr.R	/^	column_dend_height = unit(35,"mm"), #列デンドログラムの長さ$/;"	v	function:ezHeatmap
+column_names_gp	R/ezpcr.R	/^	column_names_gp = grid::gpar(fontsize = 18), #列ラベルの間隔$/;"	v	function:ezHeatmap
+column_names_rot	R/ezpcr.R	/^    column_names_rot = 90, #角度$/;"	v	function:ezHeatmap
+column_title	R/ezpcr.R	/^	column_title = titlename, #列のタイトル名$/;"	v	function:ezHeatmap
+column_title_gp	R/ezpcr.R	/^	column_title_gp=grid::gpar(fontsize=18), #列のタイトルのフォントサイズ$/;"	v	function:ezHeatmap
 compdata	R/ezpcr.R	/^            compdata<-tdata[tdata$compare==w,"dCt"]$/;"	v	function:ttest.anonFunc2581144a0d00
 compdata	R/ezpcr.R	/^            compdata<-tdata[tdata$compare==w,"dCt"]$/;"	v	function:wilcoxtest.anonFunc2581144a0e00
 con	R/ezpcr.R	/^        con <- tdata[grepl(control,tdata$Samples),]$/;"	v	function:ttest.anonFunc2581144a0d00
@@ -54,10 +63,14 @@ expand	R/ezpcr.R	/^scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , exp
 ext	R/ezpcr.R	/^ext<-function(data,Sample="",Target="")$/;"	f
 ezCalc	R/ezpcr.R	/^ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE)$/;"	f
 ezGraph	R/ezpcr.R	/^ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=/;"	f
+ezHeatmap	R/ezpcr.R	/^ezHeatmap<-function(data,samplenames=c(),titlename="",legend=FALSE,flip=FALSE)$/;"	f
+ezJoin	R/ezpcr.R	/^ezJoin<-function(data1,data2)$/;"	f
 ezPng	R/ezpcr.R	/^ezPng<-function(plots,plotname="plot",width=5,height=5,dpi=350)$/;"	f
 ezRead	R/ezpcr.R	/^ezRead<-function(dir=".\/",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Name',Ct="CT")$/;"	f
 ezSvg	R/ezpcr.R	/^ezSvg<-function(plots,plotname="plot",width=5,height=5,dpi=350)$/;"	f
 files	R/ezpcr.R	/^    files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")$/;"	v	function:ezRead
+fontsize	R/ezpcr.R	/^	column_names_gp = grid::gpar(fontsize = 18), #列ラベルの間隔$/;"	v	function:ezHeatmap
+gap	R/ezpcr.R	/^	gap = unit(20, "mm"), #グループ間の境目 $/;"	v	function:ezHeatmap
 icontrol	R/ezpcr.R	/^    icontrol <- tapply(x3$CtMean,list(x3$Samples2,x3$Targets),mean)$/;"	v	function:ezCalc
 index_zero	R/ezpcr.R	/^      index_zero <- which(x == 0)$/;"	v	function:ezGraph.custom_scale
 lS	R/ezpcr.R	/^lS<-function(df)$/;"	f
@@ -69,7 +82,10 @@ label	R/ezpcr.R	/^scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expa
 label2	R/ezpcr.R	/^      label2 <- x$/;"	v	function:ezGraph.custom_scale
 lower	R/ezpcr.R	/^            lower <- Q1 -1.5*IQR $/;"	v	function:check_outlier.anonFunc2581144a0b00
 lower	R/ezpcr.R	/^            lower <- Q1 -1.5*IQR $/;"	v	function:check_outlier.anonFunc2581144a0c00
+mat	R/ezpcr.R	/^    mat<-tapply(data$dCt,list(data$Targets,data$Samples),mean)$/;"	v	function:ezHeatmap
+mat.z	R/ezpcr.R	/^    mat.z<-genescale(-mat,1,method="Z")$/;"	v	function:ezHeatmap
 n.breaks	R/ezpcr.R	/^scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(/;"	n	nameattr:ezGraph.anonFunc2581144a0500.anonVec2581144a0806.expand
+name	R/ezpcr.R	/^    name = "Z-score" #legend title$/;"	v	function:ezHeatmap
 outlier	R/ezpcr.R	/^    outlier<-function(rq){$/;"	f	function:check_outlier
 p	R/ezpcr.R	/^	p <- ggplot(data = data1 , aes(x = Samples, y = RQ, fill= Samples)) + #aesで使用するパラ/;"	v	function:ezGraph.anonFunc2581144a0500
 p_value	R/ezpcr.R	/^            p_value <- t.test(con$dCt,compdata)$p.value$/;"	v	function:ttest.anonFunc2581144a0d00
@@ -79,6 +95,12 @@ pair	R/ezpcr.R	/^    if(NROW(samples)==1){ pair<-TRUE}else{pair<-FALSE}$/;"	v	fu
 remove_outlier	R/ezpcr.R	/^remove_outlier <- function(data,samples=c(),RQ=FALSE){$/;"	f
 results	R/ezpcr.R	/^        results<-lapply(unique(data$Targets),function(tg){$/;"	v	function:ttest
 results	R/ezpcr.R	/^        results<-lapply(unique(data$Targets),function(tg){$/;"	v	function:wilcoxtest
+row_dend_gp	R/ezpcr.R	/^    row_dend_gp = gpar(lwd = 1, col = "black"), #デンドログラムのライン幅$/;"	v	function:ezHeatmap
+row_dend_width	R/ezpcr.R	/^	row_dend_width = unit(35, "mm"), #行デンドログラムの長さ$/;"	v	function:ezHeatmap
+row_names_gp	R/ezpcr.R	/^	row_names_gp = grid::gpar(fontsize = 18), #行ラベルの間隔$/;"	v	function:ezHeatmap
+row_names_max_width	R/ezpcr.R	/^   row_names_max_width = unit(20, "cm"),#行のマージン$/;"	v	function:ezHeatmap
+row_names_rot	R/ezpcr.R	/^    row_names_rot = 0,$/;"	v	function:ezHeatmap
+show_heatmap_legend	R/ezpcr.R	/^	show_heatmap_legend = legend, #legendの非表示$/;"	v	function:ezHeatmap
 tables	R/ezpcr.R	/^    tables<-lapply(files,function(f)$/;"	v	function:ezRead
 tdata	R/ezpcr.R	/^        tdata <- subset(data,subset=Targets==tg)$/;"	v	function:ttest.anonFunc2581144a0d00
 tdata	R/ezpcr.R	/^        tdata <- subset(data,subset=Targets==tg)$/;"	v	function:wilcoxtest.anonFunc2581144a0e00
@@ -86,6 +108,7 @@ ttest	R/ezpcr.R	/^ttest <- function(data, control,samples=c()){$/;"	f
 under_10k	R/ezpcr.R	/^      under_10k <- which(x<10**4)$/;"	v	function:ezGraph.custom_scale
 upper	R/ezpcr.R	/^            upper <- Q3 + 1.5*IQR$/;"	v	function:check_outlier.anonFunc2581144a0b00
 upper	R/ezpcr.R	/^            upper <- Q3 + 1.5*IQR$/;"	v	function:check_outlier.anonFunc2581144a0c00
+w	R/ezpcr.R	/^        for(w in samplenames)$/;"	v	function:ezHeatmap
 w	R/ezpcr.R	/^        for(w in samples)$/;"	v	function:check_outlier
 w	R/ezpcr.R	/^        for(w in samples)$/;"	v	function:ttest.anonFunc2581144a0d00
 w	R/ezpcr.R	/^        for(w in samples)$/;"	v	function:wilcoxtest.anonFunc2581144a0e00
