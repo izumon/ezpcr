@@ -11,7 +11,7 @@ ezCalc(
   CtMax = 40,
   CtTh = 40,
   ID = TRUE,
-  technical = FALSE
+  technical = TRUE
 )
 }
 \arguments{
@@ -23,9 +23,9 @@ ezCalc(
 
 \item{CtTh}{if Ct Value is more than CtTh, this value sets to CtMax.}
 
-\item{CtMean}{and dCt calculation separated by Sample,Target,ID.}
+\item{technical}{TRUE...technical replicate is remained / FALSE...technical control is removed}
 
-\item{TRUE}{technical replicate is remained / FALSE technical control is removed}
+\item{CtMean}{and dCt calculation separated by Sample,Target,ID.}
 }
 \value{
 dataframe.

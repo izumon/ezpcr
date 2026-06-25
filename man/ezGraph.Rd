@@ -20,7 +20,8 @@ ezGraph(
   dotsize = 3,
   newline = " ",
   y_extension = 1.05,
-  controlIsOne = TRUE
+  controlIsOne = TRUE,
+  technical = TRUE
 )
 }
 \arguments{
@@ -51,6 +52,8 @@ ezGraph(
 \item{newline}{line feed characters. the characters separate sample name and add new line character.}
 
 \item{y_extension}{scale that extends max value of y axis.}
+
+\item{TRUE}{technical replicate is remained / FALSE technical control is removed}
 }
 \value{
 list(plot); function names(returned value) returns gene names.

@@ -56,10 +56,10 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
  #' @param CtMax if Ct Value is undetermined(NA), this value sets to CtMax.
  #' @param CtTh if Ct Value is more than CtTh, this value sets to CtMax.
  #' @param CtMean and dCt calculation separated by Sample,Target,ID.
- #' @param TRUE technical replicate is remained / FALSE technical control is removed
+ #' @param technical TRUE...technical replicate is remained / FALSE...technical control is removed
  #' @return dataframe.
 #' @export
-ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE,technical=FALSE)
+ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE,technical=TRUE)
 {
 library(dplyr)
     if(length( subset(df,subset=Targets==biologicalControl))==0)
@@ -133,9 +133,10 @@ library(dplyr)
     x3<-x3%>% mutate(RQ=2^(-ddCt))
     x3<-x3%>% mutate(RQMEAN=mean(RQ)) %>% ungroup() #%>% as.data.frame()
 
+
     if(technical==FALSE)
     {
-        x3<- x3[!duplicated(x3[,c("Samples","Targets")]),]
+        data<-data[!duplicated(data[,c("Samples","Targets")]),]
     }
 
     #x3<-x3%>% mutate(rdCtMean=-dCtMean)
@@ -163,11 +164,12 @@ library(dplyr)
  #' @param dotsize Size of dots. if dot option is TRUE, this option is applied to dot plot.
  #' @param newline line feed characters. the characters separate sample name and add new line character. 
  #' @param y_extension scale that extends max value of y axis. 
+ #' @param TRUE technical replicate is remained / FALSE technical control is removed
  #' @return list(plot); function names(returned value) returns gene names.
  #' @examples p <- ezGraph(dataframe,samplenames=c("S1","S2","S3"),dot=FALSE,genes=c("gene1","gene2"),color=c("red","blue","white"))
  #' plot(p)
  #' @export
-ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signifs=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE)
+ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signifs=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE)
 {
     library(ggplot2)
     library(dplyr)
@@ -178,6 +180,10 @@ ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSi
     {
         bc <- unique(data$biologicalControl)
         data[data$Samples==bc,"RQ"]<-1
+    }
+    if(technical==TRUE)
+    {
+        data<-data[!duplicated(data[,c("Samples","Targets")]),]
     }
 
 custom_scale <- function(x) {
