@@ -452,7 +452,7 @@ ttest <- function(data, control,samples=c()){
     })%>% bind_rows() #end lapply============
 
     # 列signif に * ** を追加
-    if(pair==TRUE)
+    if(pair==TRUE || NROW(samples)>1)
     {
         results<-mutate(results, signif = if_else(p_val<0.05,"*",""),
             signif=if_else(p_val<0.01,"**",signif))
@@ -513,7 +513,7 @@ wilcoxtest <- function(data, control,samples){
     })%>% bind_rows() #end lapply============
 
     # 列signif に * ** を追加
-    if(pair==TRUE)
+    if(pair==TRUE || NROW(samples)>1 )
     {
         results<-mutate(results, signif = if_else(p_val<0.05,"*",""),
             signif=if_else(p_val<0.01,"**",signif))
