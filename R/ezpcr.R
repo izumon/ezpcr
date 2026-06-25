@@ -86,11 +86,12 @@ library(dplyr)
         icontrol<-t(icontrol)
     }
 
+    icon<-icontrol[,grepl(internalControl,colnames(icontrol))]
     tryCatch(
-        if(NROW(icontrol)>1){
-            icontrol<- icontrol[,grepl(internalControl,colnames(icontrol))] %>% apply(1,mean)
+        if(NROW(icon)>1){
+            icontrol<-  icon %>% apply(1,mean)
         }else{
-            icontrol<- icontrol[,grepl(internalControl,colnames(icontrol))] %>% mean
+            icontrol<- icon %>% mean
         }
     ,
         print("error at internal control calculation")
