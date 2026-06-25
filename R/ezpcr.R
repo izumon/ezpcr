@@ -87,7 +87,8 @@ library(dplyr)
     }
 
     icon <- icontrol[,grepl(internalControl,colnames(icontrol))]
-        if(NROW(icon)>1){
+        if(NROW(unlist(strsplit(internalControl,"\\|")))>1)
+        {
             icontrol<-  icon %>% apply(1,mean)
         }else{
             icontrol<- icon %>% mean
