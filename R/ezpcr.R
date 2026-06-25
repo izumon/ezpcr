@@ -81,7 +81,20 @@ library(dplyr)
 
 #calc internal control mean
     icontrol <- tapply(x3$CtMean,list(x3$Samples2,x3$Targets),mean)
-    icontrol<- icontrol[,grepl(internalControl,colnames(icontrol))] %>% apply(1,mean)
+    if(internalControl %in% rownames(icontrol))
+    {
+        icontrol<-t(icontrol)
+    }
+
+    tryCatch(
+        if(NROW(icontrol)>1){
+            icontrol<- icontrol[,grepl(internalControl,colnames(icontrol))] %>% apply(1,mean)
+        }else{
+            icontrol<- icontrol[,grepl(internalControl,colnames(icontrol))] %>% mean
+        }
+    ,
+        print("error at internal control calculation")
+    )
 
 #dCt
     x3$dCt<-x3$Ct
