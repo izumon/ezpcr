@@ -86,7 +86,7 @@ library(dplyr)
         icontrol<-t(icontrol)
     }
 
-    icon<-icontrol[,grepl(internalControl,colnames(icontrol))]
+    icon <- icontrol[,grepl(internalControl,colnames(icontrol))]
     tryCatch(
         if(NROW(icon)>1){
             icontrol<-  icon %>% apply(1,mean)
