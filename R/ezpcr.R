@@ -513,7 +513,7 @@ wilcoxtest <- function(data, control,samples){
     })%>% bind_rows() #end lapply============
 
     # 列signif に * ** を追加
-    if(pair==TRUE || NROW(samples)>1 )
+    if(pair==TRUE || NROW(samples)>1 ) #サンプル数が複数だと強制的にpairwizeになる
     {
         results<-mutate(results, signif = if_else(p_val<0.05,"*",""),
             signif=if_else(p_val<0.01,"**",signif))
@@ -522,6 +522,7 @@ wilcoxtest <- function(data, control,samples){
         results<-mutate(results, signif = if_else(p_adjust<0.05,"*",""),
             signif=if_else(p_adjust<0.01,"**",signif))
     }
+
 
     results$compare<-NULL
     return(results)
