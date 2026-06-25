@@ -56,9 +56,10 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
  #' @param CtMax if Ct Value is undetermined(NA), this value sets to CtMax.
  #' @param CtTh if Ct Value is more than CtTh, this value sets to CtMax.
  #' @param CtMean and dCt calculation separated by Sample,Target,ID.
+ #' @param remove technical control (remove same sample name / target group)
  #' @return dataframe.
 #' @export
-ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE)
+ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE,technical=FALSE)
 {
 library(dplyr)
     if(length( subset(df,subset=Targets==biologicalControl))==0)
@@ -132,6 +133,11 @@ library(dplyr)
     x3<-x3%>% mutate(RQ=2^(-ddCt))
     x3<-x3%>% mutate(RQMEAN=mean(RQ)) %>% ungroup() #%>% as.data.frame()
 
+    if(technical==FALSE)
+    {
+        x3<- x3[!duplicated(x3[,c("Samples","Targets")]),]
+    }
+
     #x3<-x3%>% mutate(rdCtMean=-dCtMean)
     return(as.data.frame(x3))
 
@@ -161,13 +167,18 @@ library(dplyr)
  #' @examples p <- ezGraph(dataframe,samplenames=c("S1","S2","S3"),dot=FALSE,genes=c("gene1","gene2"),color=c("red","blue","white"))
  #' plot(p)
  #' @export
-ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signifs=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05)
+ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signifs=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE)
 {
     library(ggplot2)
     library(dplyr)
     library(ggpubr)
     library(scales)
 
+    if(controlIsOne==TRUE)
+    {
+        bc <- unique(data$biologicalControl)
+        data[data$Samples==bc,"RQ"]<-1
+    }
 
 custom_scale <- function(x) {
       index_zero <- which(x == 0)
