@@ -10,7 +10,8 @@ ezCalc(
   internalControl = "GAPDH",
   CtMax = 40,
   CtTh = 40,
-  ID = TRUE
+  ID = TRUE,
+  technical = FALSE
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ ezCalc(
 \item{CtTh}{if Ct Value is more than CtTh, this value sets to CtMax.}
 
 \item{CtMean}{and dCt calculation separated by Sample,Target,ID.}
+
+\item{TRUE}{technical replicate is remained / FALSE technical control is removed}
 }
 \value{
 dataframe.

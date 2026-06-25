@@ -56,7 +56,7 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
  #' @param CtMax if Ct Value is undetermined(NA), this value sets to CtMax.
  #' @param CtTh if Ct Value is more than CtTh, this value sets to CtMax.
  #' @param CtMean and dCt calculation separated by Sample,Target,ID.
- #' @param remove technical control (remove same sample name / target group)
+ #' @param TRUE technical replicate is remained / FALSE technical control is removed
  #' @return dataframe.
 #' @export
 ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE,technical=FALSE)

@@ -19,7 +19,8 @@ ezGraph(
   color = c(),
   dotsize = 3,
   newline = " ",
-  y_extension = 1.05
+  y_extension = 1.05,
+  controlIsOne = TRUE
 )
 }
 \arguments{
