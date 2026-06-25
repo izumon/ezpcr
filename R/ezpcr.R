@@ -87,15 +87,11 @@ library(dplyr)
     }
 
     icon <- icontrol[,grepl(internalControl,colnames(icontrol))]
-    tryCatch(
         if(NROW(icon)>1){
             icontrol<-  icon %>% apply(1,mean)
         }else{
             icontrol<- icon %>% mean
         }
-    ,
-        print("error at internal control calculation")
-    )
 
 #dCt
     x3$dCt<-x3$Ct
