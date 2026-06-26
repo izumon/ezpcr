@@ -5,16 +5,16 @@
 #' @export
 ezUpdate<-function()
 {
-    if("pak" %in% installed.packages())
+    if(!"pak" %in% installed.packages())
     {
         install.packages("pak")
     }
     library(devtools)
     library(pak)
     tryCatch(
-    pak::pak("izumon/ezpcr")
-    ,
-    devtools::install_github("izumon/ezpcr")
+    pak::pak("izumon/ezpcr"),
+    error = function(e) e,
+    finally = devtools::install_github("izumon/ezpcr")
     )
     return()
 }
@@ -680,9 +680,9 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
                             }) %>% unlist()
 
     #yの下限、上限を取得
-    increment <- ymax*(0.02*(textsize/5)) #y軸の拡張値
-    ymin <- max(data$RQ)+increment #yの最大値
-    ymax <- ymin + increment*NROW(xmax) + increment
+    increment <- max(data$RQ)*(0.02*(textsize/5)) #y軸の拡張値
+    ymin <- max(data$RQ) + increment #yの最大値
+    ymax <- ymin + increment * NROW(xmax) + increment
 
     #yの位置を決定
     yextends<-seq(ymin,ymax,by=increment)
