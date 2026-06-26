@@ -717,7 +717,7 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
         size=size,
         tip_length=tip_length,
         hjust=0.5,
-        vjust=0.5
+        vjust=0.10
     )
     return(returner)
 }
