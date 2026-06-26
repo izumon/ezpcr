@@ -278,7 +278,7 @@ scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks 
     PSIGNIF<-NULL #有意差プロット
     if(length(signiflist)!=0){
 
-        PSIGNIF <- ezSignif(data1,signiflist,textsize=labelSize,significant_column=significant_column)
+        PSIGNIF <- ezSignif(data1,pairs=signiflist,textsize=labelSize,significant_column=significant_column)
 
     #add text ===
 #  p<-last_plot()+geom_signif(
@@ -660,7 +660,7 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
                             }) %>% unlist()
     if(!all(flags))
     {
-        print(sprintf("signif annotation error::Sample list pairs is invalid samples=%s, pairs=%s",Samples,pairs))
+        print(sprintf("signif annotation error::Sample list pairs is invalid samples=%s, pairs=%s",Samples,unlist(pairs)))
         return(NULL)
     }
 
