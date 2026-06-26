@@ -1,4 +1,15 @@
 
+
+#' ezUpdate
+#' ezpcrをアップデートする
+#' @export
+ezUpdate<-function()
+{
+    library(devtools)
+    devtools::install_github("izumon/ezpcr")
+    return()
+}
+
  #' ezread
  #'
  #' This function reads data exported by QuantStudio.
@@ -136,7 +147,7 @@ library(dplyr)
 
     if(technical==FALSE)
     {
-        data<-data[!duplicated(data[,c("Samples","Targets")]),]
+        ezShrink(x3)
     }
 
     #x3<-x3%>% mutate(rdCtMean=-dCtMean)
@@ -169,7 +180,7 @@ library(dplyr)
  #' @examples p <- ezGraph(dataframe,samplenames=c("S1","S2","S3"),dot=FALSE,genes=c("gene1","gene2"),color=c("red","blue","white"))
  #' plot(p)
  #' @export
-ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signifs=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE)
+ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signiflist=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE,significant_column="signif")
 {
     library(ggplot2)
     library(dplyr)
@@ -181,9 +192,9 @@ ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSi
         bc <- unique(data$biologicalControl)
         data[data$Samples==bc,"RQ"]<-1
     }
-    if(technical==TRUE)
+    if(technical==FALSE)
     {
-        data<-data[!duplicated(data[,c("Samples","Targets")]),]
+        ezShrink(data)
     }
 
 custom_scale <- function(x) {
@@ -264,14 +275,19 @@ scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks 
     }
  
     #引数で有意差を追加
-    if(length(signifs)!=0){
+    PSIGNIF<-NULL #有意差プロット
+    if(length(signiflist)!=0){
+
+        PSIGNIF <- ezSignif(data1,signiflist,textsize=labelSize,significant_column=significant_column)
+
     #add text ===
-  p<-last_plot()+geom_signif(
-    aes(dCt),
-    comparisons = list(signifs),  # 比較するペア
-    test = "wilcox.test",                  # t検定を使用
-    map_signif_level = TRUE           # p<0.05,* / p<0.01,** / p<0.001,*** に自動変換
-  )}
+#  p<-last_plot()+geom_signif(
+#    aes(dCt),
+#    comparisons = list(signifs),  # 比較するペア
+#    test = "wilcox.test",                  # t検定を使用
+#    map_signif_level = TRUE           # p<0.05,* / p<0.01,** / p<0.001,*** に自動変換
+#  )
+    }
 
     if(NROW(color)>=NROW(unique(data1$Samples))){
         #settings ===
@@ -281,8 +297,13 @@ scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks 
         print(sprintf("color=%s, samples=%s",NROW(color),NROW(unique(data1$Samples))))
     }
 
+    if(!is.null(PSIGNIF))
+    {
+        p<- last_plot()+PSIGNIF
+    }
+
     #signifがすでに入力されているとき有意差を表示
-    if(("signif" %in% colnames(data)) && length(signifs)==0)
+    if(("signif" %in% colnames(data)) && length(signiflist)==0 && is.null(PSIGNIF))
     {
         p<-last_plot()+stat_summary(fun="max", geom="text",aes(label=signif),vjust=0.5,size=textSize*1.1,color="black",fontface="bold")
     }
@@ -601,3 +622,91 @@ ezHeatmap<-function(data,samplenames=c(),titlename="",legend=FALSE,flip=FALSE)
     return(P)
 }
 
+#' removing technical control 
+#' 遺伝子名/サンプル名が重複するデータを1つにまとめる
+#' @param data data frame which contains Samples,Targets and RQ.
+#' @export
+ezShrink<-function(data)
+{
+    data<-data %>% mutate(Ct=CtMean,
+                            dCt=dCtMean,
+                            ddCt=ddCtMean,
+                            RQ=RQMEAN)
+    data<-data[!duplicated(data[,c("Samples","Targets")]),]
+    return(data)
+}
+
+
+#' create significant plot
+#' 有意差を表示する
+#' @param data data frame which contains Samples,Targets and RQ.
+#' @param pairs exp) argument list(c("A","B"),c("A","C")) creates line among A-B, A-C
+#' @param textsize text size of significant annotations.
+#' @param size significant bar size,
+#' @param tip_length tip of significant bar size,
+#' @param significant_column you can set optional data column as annotation, default="signif"
+#' @return ggsignif::geom_signif
+#' @export
+ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,significant_column="signif")
+{
+    if(!(significant_column %in% colnames(data))){
+        print("significant data is not present in the dataframe...")
+        return(NULL)
+    }
+    Samples <- levels(data$Samples)
+    #sampleが存在するかどうかのチェック
+    flags <- lapply(pairs,function(x){
+                    return( (x[1] %in% Samples) & (x[2] %in% Samples))
+                            }) %>% unlist()
+    if(!all(flags))
+    {
+        print("signif annotation error::Sample list pairs is invalid")
+        return(NULL)
+    }
+
+    xmins <- lapply(pairs,function(x){
+                        return(x[1])
+                            }) %>% unlist()
+    xmax <- lapply(pairs,function(x){
+                        return(x[2])
+                            }) %>% unlist()
+
+    #yの下限、上限を取得
+    increment <- ymax*(0.02*(textsize/5)) #y軸の拡張値
+    ymin <- max(data$RQ)+increment #yの最大値
+    ymax <- ymin + increment*NROW(xmax) + increment
+
+    #yの位置を決定
+    yextends<-seq(ymin,ymax,by=increment)
+    if(NROW(yextends)>NROW(xmax)){yextends<-yextends[1:NROW(xmax)]}
+    if(NROW(yextends)<NROW(xmax)){yextends<-append(yextends,yextends[NROW(yextends)]+increment)}
+
+    #表示データを取得
+    shrink <- data[!duplicated(data$Samples),]
+    sig <- lapply(xmax,function(x){
+                    return(unique(shrink[shrink$Samples==x,significant_column]))
+                            }) %>% unlist()
+    if(NROW(sig)!=NROW(xmax))
+    {
+        print(sprintf("signif value is invalid. sample=%s:significant=%s",NROW(xmax),NROW(sig)))
+        return(NULL)
+    }
+
+    #データフレームを作成
+    sigdata <- data.frame(y=yextends,xmin=factor(xmins,levels=Samples),xmax=factor(xmax,levels=Samples),signif=sig)
+
+    returner<-geom_signif(
+        data=sigdata,
+        aes(
+        xmin=xmin,
+        xmax=xmax,
+        y_position=y,
+        annotations=signif),
+    stat="identity",
+    manual=TRUE,
+    textsize=textsize,
+    size=size,
+    tip_length=tip_length
+    )
+    return(returner)
+}

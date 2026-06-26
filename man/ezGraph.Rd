@@ -15,13 +15,14 @@ ezGraph(
   titleSize = 32,
   legendPosition = "none",
   genes = NULL,
-  signifs = list(),
+  signiflist = list(),
   color = c(),
   dotsize = 3,
   newline = " ",
   y_extension = 1.05,
   controlIsOne = TRUE,
-  technical = TRUE
+  technical = TRUE,
+  significant_column = "signif"
 )
 }
 \arguments{
