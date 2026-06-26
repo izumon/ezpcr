@@ -660,7 +660,7 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
                             }) %>% unlist()
     if(!all(flags))
     {
-        print("signif annotation error::Sample list pairs is invalid")
+        print(sprintf("signif annotation error::Sample list pairs is invalid samples=%s, pairs=%s",Samples,pairs))
         return(NULL)
     }
 
