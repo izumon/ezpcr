@@ -192,7 +192,7 @@ library(dplyr)
  #' @examples p <- ezGraph(dataframe,samplenames=c("S1","S2","S3"),dot=FALSE,genes=c("gene1","gene2"),color=c("red","blue","white"))
  #' plot(p)
  #' @export
-ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signiflist=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE,significant_column="signif",textNotSignif="n.s.",signifSize=25)
+ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signiflist=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE,significant_column="signif",textNotSignif="n.s.",signifSize=10)
 {
     library(ggplot2)
     library(dplyr)
@@ -716,7 +716,8 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
         annotations=sigdata$signifc,
         size=size,
         tip_length=tip_length,
-        hjust=0.5
+        hjust=0.5,
+        vjust=0.5
     )
     return(returner)
 }
