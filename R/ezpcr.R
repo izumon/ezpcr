@@ -663,14 +663,14 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
     }
     Samples <- levels(data$Samples)
     #sampleが存在するかどうかのチェック
-    flags <- lapply(pairs,function(x){
-                    return( (x[1] %in% Samples) & (x[2] %in% Samples))
-                            }) %>% unlist()
-    if(!all(flags))
-    {
-        print(sprintf("signif annotation error::argument signif list is invalid samples=%s",Samples))
-        return(NULL)
-    }
+    #flags <- lapply(pairs,function(x){
+    #                return( (x[1] %in% Samples) & (x[2] %in% Samples))
+    #                        }) %>% unlist()
+    #if(!all(flags))
+    #{
+    #    print(sprintf("signif annotation error::argument signif list is invalid samples=%s",Samples))
+    #    return(NULL)
+    #}
 
     xmins <- lapply(pairs,function(x){
                         return(x[1])
