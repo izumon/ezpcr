@@ -22,7 +22,8 @@ ezGraph(
   y_extension = 1.05,
   controlIsOne = TRUE,
   technical = TRUE,
-  significant_column = "signif"
+  significant_column = "signif",
+  textNotSignif = "n.s."
 )
 }
 \arguments{
@@ -54,7 +55,11 @@ ezGraph(
 
 \item{y_extension}{scale that extends max value of y axis.}
 
-\item{TRUE}{technical replicate is remained / FALSE technical control is removed}
+\item{technical}{TRUE technical replicate is remained / FALSE technical control is removed}
+
+\item{significant_column}{text column that is put above significance bar.}
+
+\item{txtNotSignif}{text if this data is not significant, txtNotSignif is put above significance bar.}
 }
 \value{
 list(plot); function names(returned value) returns gene names.

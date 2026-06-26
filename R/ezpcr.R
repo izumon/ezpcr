@@ -184,12 +184,14 @@ library(dplyr)
  #' @param dotsize Size of dots. if dot option is TRUE, this option is applied to dot plot.
  #' @param newline line feed characters. the characters separate sample name and add new line character. 
  #' @param y_extension scale that extends max value of y axis. 
- #' @param TRUE technical replicate is remained / FALSE technical control is removed
+ #' @param technical TRUE technical replicate is remained / FALSE technical control is removed
+ #' @param significant_column text column that is put above significance bar.
+ #' @param txtNotSignif text if this data is not significant, txtNotSignif is put above significance bar.
  #' @return list(plot); function names(returned value) returns gene names.
  #' @examples p <- ezGraph(dataframe,samplenames=c("S1","S2","S3"),dot=FALSE,genes=c("gene1","gene2"),color=c("red","blue","white"))
  #' plot(p)
  #' @export
-ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signiflist=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE,significant_column="signif")
+ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signiflist=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE,significant_column="signif",textNotSignif="n.s.")
 {
     library(ggplot2)
     library(dplyr)
@@ -286,7 +288,7 @@ scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks 
     #引数で有意差を追加
     PSIGNIF<-NULL #有意差プロット
     if(length(signiflist)!=0){
-        PSIGNIF <- ezSignif(data1,pairs=signiflist,textsize=labelSize,significant_column=significant_column)
+        PSIGNIF <- ezSignif(data1,pairs=signiflist,textsize=labelSize,significant_column=significant_column,txtNotSignif=textNotSignif)
 
     #add text ===
 #  p<-last_plot()+geom_signif(
@@ -655,7 +657,7 @@ ezShrink<-function(data)
 #' @param significant_column you can set optional data column as annotation, default="signif"
 #' @return ggsignif::geom_signif
 #' @export
-ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,significant_column="signif")
+ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,significant_column="signif",txtNotSignif="n.s.")
 {
     if(!(significant_column %in% colnames(data))){
         print("significant data is not present in the dataframe...")
@@ -699,22 +701,21 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
         print(sprintf("signif value is invalid. sample=%s:significant=%s",NROW(xmax),NROW(sig)))
         return(NULL)
     }
+    Samples<-levels(shrink)
 
     #データフレームを作成
-    sigdata <- data.frame(y=yextends,xmin=factor(xmins,levels=Samples),xmax=factor(xmax,levels=Samples),signif=sig)
+    sigdata <- data.frame(Samples="",y=yextends,xmin=factor(xmins,levels=levels(shrink$Samples)),xmax=factor(xmax,levels=levels(shrink$Samples)),signifc=sig)
+    sigdata[sigdata$signifc=="" | is.na(sigdata$signifc),"signifc"] <- txtNotSignif
 
     returner<-geom_signif(
-        data=sigdata,
-        aes(
-        xmin=xmin,
-        xmax=xmax,
-        y_position=y,
-        annotations=signif),
-    stat="identity",
-    manual=TRUE,
-    textsize=textsize,
-    size=size,
-    tip_length=tip_length
+        xmin=sigdata$xmin,
+        xmax=sigdata$xmax,
+        y_position=sigdata$y,
+        annotations=sigdata$signifc,
+        textsize=textsize,
+        size=size,
+        tip_length=tip_length,
+        vjust=0.5
     )
     return(returner)
 }
