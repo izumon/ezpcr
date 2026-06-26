@@ -709,7 +709,7 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
     sigdata[sigdata$signifc=="" | is.na(sigdata$signifc),"signifc"] <- txtNotSignif
 
     returner<-geom_signif(
-        aes(textsize=signifSize),
+        textsize=signifSize,
         xmin=sigdata$xmin,
         xmax=sigdata$xmax,
         y_position=sigdata$y,
