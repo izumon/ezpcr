@@ -5,8 +5,17 @@
 #' @export
 ezUpdate<-function()
 {
+    if("pak" %in% installed.packages())
+    {
+        install.packages("pak")
+    }
     library(devtools)
+    library(pak)
+    tryCatch(
+    pak::pak("izumon/ezpcr")
+    ,
     devtools::install_github("izumon/ezpcr")
+    )
     return()
 }
 
@@ -277,7 +286,6 @@ scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks 
     #引数で有意差を追加
     PSIGNIF<-NULL #有意差プロット
     if(length(signiflist)!=0){
-
         PSIGNIF <- ezSignif(data1,pairs=signiflist,textsize=labelSize,significant_column=significant_column)
 
     #add text ===
@@ -660,7 +668,7 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
                             }) %>% unlist()
     if(!all(flags))
     {
-        print(sprintf("signif annotation error::Sample list pairs is invalid samples=%s, pairs=%s",Samples,unlist(pairs)))
+        print(sprintf("signif annotation error::argument signif list is invalid samples=%s",Samples))
         return(NULL)
     }
 
