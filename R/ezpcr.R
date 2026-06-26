@@ -288,7 +288,7 @@ scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks 
     #引数で有意差を追加
     PSIGNIF<-NULL #有意差プロット
     if(length(signiflist)!=0){
-        PSIGNIF <- ezSignif(data1,pairs=signiflist,textsize=labelSize,significant_column=significant_column,txtNotSignif=textNotSignif)
+        PSIGNIF <- ezSignif(data1,pairs=signiflist,textsize=textSize,significant_column=significant_column,txtNotSignif=textNotSignif)
 
     #add text ===
 #  p<-last_plot()+geom_signif(
@@ -715,7 +715,7 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
         textsize=textsize,
         size=size,
         tip_length=tip_length,
-        vjust=0.5
+        hjust=0.5
     )
     return(returner)
 }
