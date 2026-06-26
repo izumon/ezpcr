@@ -73,11 +73,11 @@ ezCalc	R/ezpcr.R	/^ezCalc<-function(df,biologicalControl,internalControl="GAPDH"
 ezGraph	R/ezpcr.R	/^ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=/;"	f
 ezHeatmap	R/ezpcr.R	/^ezHeatmap<-function(data,samplenames=c(),titlename="",legend=FALSE,flip=FALSE)$/;"	f
 ezJoin	R/ezpcr.R	/^ezJoin<-function(data1,data2)$/;"	f
-ezPng	R/ezpcr.R	/^ezPng<-function(plots,plotname="plot",width=5,height=5,dpi=350)$/;"	f
+ezPng	R/ezpcr.R	/^ezPng<-function(plots,plotname="plot",dir=".\/",width=5,height=5,dpi=350)$/;"	f
 ezRead	R/ezpcr.R	/^ezRead<-function(dir=".\/",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Name',Ct="CT")$/;"	f
 ezShrink	R/ezpcr.R	/^ezShrink<-function(data)$/;"	f
 ezSignif	R/ezpcr.R	/^ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,significant_column="sig/;"	f
-ezSvg	R/ezpcr.R	/^ezSvg<-function(plots,plotname="plot",width=5,height=5,dpi=350)$/;"	f
+ezSvg	R/ezpcr.R	/^ezSvg<-function(plots,plotname="plot",dir=".\/",width=5,height=5,dpi=350)$/;"	f
 ezUpdate	R/ezpcr.R	/^ezUpdate<-function()$/;"	f
 files	R/ezpcr.R	/^    files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")$/;"	v	function:ezRead
 fontsize	R/ezpcr.R	/^	column_names_gp = grid::gpar(fontsize = 18), #列ラベルの間隔$/;"	v	function:ezHeatmap

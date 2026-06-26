@@ -365,18 +365,18 @@ ext<-function(data,Sample="",Target="")
 
 #' write plots as png
 #' @export
-ezPng<-function(plots,plotname="plot",width=5,height=5,dpi=350)
+ezPng<-function(plots,plotname="plot",dir="./",width=5,height=5,dpi=350)
 {
     for(w in names(P))
     {
-        ggsave(sprintf("./%s-%s.png",plotname,w),plot=P[[w]],device=png,width=width,height=height,dpi=dpi,bg="white")
+        ggsave(sprintf("./%s/%s-%s.png",dir,plotname,w),plot=P[[w]],device=png,width=width,height=height,dpi=dpi,bg="white")
     }
 }
 
 
 #' write plots as svg
 #' @export
-ezSvg<-function(plots,plotname="plot",width=5,height=5,dpi=350)
+ezSvg<-function(plots,plotname="plot",dir="./",width=5,height=5,dpi=350)
 {
     if(!("svglite" %in% installed.packages()))
     {
@@ -386,7 +386,7 @@ ezSvg<-function(plots,plotname="plot",width=5,height=5,dpi=350)
 
     for(w in names(P))
     {
-        ggsave(sprintf("./%s-%s.svg",plotname,w),plot=P[[w]],device=svglite,width=width,height=height,dpi=dpi,bg="white")
+        ggsave(sprintf("%s/%s-%s.svg",dir,plotname,w),plot=P[[w]],device=svglite,width=width,height=height,dpi=dpi,bg="white")
     }
 }
 
