@@ -4,7 +4,20 @@
 \alias{ezSvg}
 \title{write plots as svg}
 \usage{
-ezSvg(plots, plotname = "plot", width = 5, height = 5, dpi = 350)
+ezSvg(plots, plotname = "plot", dir = "./", width = 5, height = 5, dpi = 350)
+}
+\arguments{
+\item{plots}{list of bar plot out put by ezGraph}
+
+\item{plotname}{text of filename}
+
+\item{dir}{save directory. if plotname contains directory, dir is ignored.}
+
+\item{width}{horizonal size of plot}
+
+\item{height}{vertical size of plot}
+
+\item{dpi}{dpi}
 }
 \description{
 write plots as svg

@@ -364,17 +364,33 @@ ext<-function(data,Sample="",Target="")
 }
 
 #' write plots as png
+#' @param plots list of bar plot out put by ezGraph
+#' @param plotname text of filename
+#' @param dir save directory. if plotname contains directory, dir is ignored.
+#' @param width horizonal size of plot
+#' @param height vertical size of plot
+#' @param dpi dpi
 #' @export
 ezPng<-function(plots,plotname="plot",dir="./",width=5,height=5,dpi=350)
 {
     for(w in names(P))
     {
-        ggsave(sprintf("./%s/%s-%s.png",dir,plotname,w),plot=P[[w]],device=png,width=width,height=height,dpi=dpi,bg="white")
+        if(!grepl("/",plotname)){
+            ggsave(sprintf("%s/%s-%s.png",dir,plotname,w),plot=P[[w]],device=png,width=width,height=height,dpi=dpi,bg="white")
+        }else{
+            ggsave(sprintf("%s-%s.png",plotname,w),plot=P[[w]],device=png,width=width,height=height,dpi=dpi,bg="white")
+        }
     }
 }
 
 
 #' write plots as svg
+#' @param plots list of bar plot out put by ezGraph
+#' @param plotname text of filename
+#' @param dir save directory. if plotname contains directory, dir is ignored.
+#' @param width horizonal size of plot
+#' @param height vertical size of plot
+#' @param dpi dpi
 #' @export
 ezSvg<-function(plots,plotname="plot",dir="./",width=5,height=5,dpi=350)
 {
@@ -386,7 +402,11 @@ ezSvg<-function(plots,plotname="plot",dir="./",width=5,height=5,dpi=350)
 
     for(w in names(P))
     {
-        ggsave(sprintf("%s/%s-%s.svg",dir,plotname,w),plot=P[[w]],device=svglite,width=width,height=height,dpi=dpi,bg="white")
+        if(!grepl("/",plotname)){
+            ggsave(sprintf("%s/%s-%s.svg",dir,plotname,w),plot=P[[w]],device=svglite,width=width,height=height,dpi=dpi,bg="white")
+        }else{
+            ggsave(sprintf("%s-%s.svg",plotname,w),plot=P[[w]],device=svglite,width=width,height=height,dpi=dpi,bg="white")
+        }
     }
 }
 
@@ -572,7 +592,7 @@ wilcoxtest <- function(data, control,samples){
 #' @export
 ezJoin<-function(data1,data2)
 {
-    retunr(rbind(data1,data2))
+    return(rbind(data1,data2))
 }
 
 #' heatmap 

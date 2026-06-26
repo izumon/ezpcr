@@ -24,7 +24,7 @@ ezGraph(
   technical = TRUE,
   significant_column = "signif",
   textNotSignif = "n.s.",
-  signifSize = 25
+  signifSize = 10
 )
 }
 \arguments{
