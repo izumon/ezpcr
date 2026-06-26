@@ -23,7 +23,8 @@ ezGraph(
   controlIsOne = TRUE,
   technical = TRUE,
   significant_column = "signif",
-  textNotSignif = "n.s."
+  textNotSignif = "n.s.",
+  signifSize = 25
 )
 }
 \arguments{
@@ -58,6 +59,8 @@ ezGraph(
 \item{technical}{TRUE technical replicate is remained / FALSE technical control is removed}
 
 \item{significant_column}{text column that is put above significance bar.}
+
+\item{signifSize}{text size of text of significant.}
 
 \item{txtNotSignif}{text if this data is not significant, txtNotSignif is put above significance bar.}
 }

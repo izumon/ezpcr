@@ -12,7 +12,8 @@ ezSignif(
   size = 0.5,
   tip_length = 0,
   significant_column = "signif",
-  txtNotSignif = "n.s."
+  txtNotSignif = "n.s.",
+  signifSize = 25
 )
 }
 \arguments{
