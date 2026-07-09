@@ -36,10 +36,11 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
     library(dplyr)
     library(readxl)
     files<-list.files(dir,pattern="*.csv|*.txt|*.xlsx|*.xls")
-    cat(sprintf("files \033[32m %s \033[0m have been found",paste(files,collapse=",")))
+    #cat(sprintf("files \033[32m %s \033[0m have been found",paste(files,collapse=",")))
+    counter <<- 1
     tables<-lapply(files,function(f)
     {
-        counter<-grep(f,files)
+        print(sprintf("file: %s is loading", f))
         A0<-NULL
         if(endsWith(f,"txt")||endsWith(f,".csv"))
         {
@@ -56,9 +57,11 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
         }
     #A0<-subset(A0,subset=!is.na(Omit))
     A0<-as.data.frame(A0)
+    A0<-A0[!is.na(A0[,SAMPLENAME]),]
     A0<-data.frame(Samples=as.vector(A0[,SAMPLENAME]),Targets=as.vector(A0[,TARGETNAME]),Ct=as.numeric(as.vector(A0[,Ct])),ID=counter)
     A0<-A0[!is.na(A0$Samples),]
 
+    counter <<- counter +1
     return(as.data.frame(A0))
     })#end lapply
     atable<-bind_rows(tables)
