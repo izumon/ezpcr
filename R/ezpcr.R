@@ -168,6 +168,7 @@ library(dplyr)
     if(technical==FALSE)
     {
         x3<-ezShrink(x3)
+        print("technical replicates were grouped.")
     }
 
     #x3<-x3%>% mutate(rdCtMean=-dCtMean)
