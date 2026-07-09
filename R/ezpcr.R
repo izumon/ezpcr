@@ -85,10 +85,18 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
 ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE,technical=TRUE)
 {
 library(dplyr)
-    if(length( subset(df,subset=Targets==biologicalControl))==0)
+    if(NROW(df[grepl(internalControl,df$Targets),]) ==0 )
     {
-        print(sprintf(" %s is not containd in this data!"))
+        print(sprintf("Internal control %s is not containd in this data!"))
+        return(NULL)
     }
+
+    if(NROW(df[grepl(biologicalControl,df$Samples),]) ==0 )
+    {
+        print(sprintf("Biological control %s is not containd in this data!"))
+        return(NULL)
+    }
+
     if(!("ID" %in% colnames(df))){df$ID<-0}
 
 #Ctを数値化
@@ -159,7 +167,7 @@ library(dplyr)
 
     if(technical==FALSE)
     {
-        ezShrink(x3)
+        x3<-ezShrink(x3)
     }
 
     #x3<-x3%>% mutate(rdCtMean=-dCtMean)
@@ -209,7 +217,7 @@ ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSi
     }
     if(technical==FALSE)
     {
-        ezShrink(data)
+        data<-ezShrink(data)
     }
 
 custom_scale <- function(x) {
@@ -667,6 +675,7 @@ ezShrink<-function(data)
                             ddCt=ddCtMean,
                             RQ=RQMEAN)
     data<-data[!duplicated(data[,c("Samples","Targets")]),]
+    print("The data of technical replicates were removed.")
     return(data)
 }
 
