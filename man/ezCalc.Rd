@@ -11,7 +11,8 @@ ezCalc(
   CtMax = 40,
   CtTh = 40,
   ID = TRUE,
-  technical = TRUE
+  technical = TRUE,
+  RQcontrolIsOne = TRUE
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ ezCalc(
 \item{CtTh}{if Ct Value is more than CtTh, this value sets to CtMax.}
 
 \item{technical}{TRUE...technical replicate is remained / FALSE...technical control is removed}
+
+\item{RQcontrolIsOne}{TRUE... RQ of the biological control is set to 1.}
 
 \item{CtMean}{and dCt calculation separated by Sample,Target,ID.}
 }

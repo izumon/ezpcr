@@ -81,9 +81,10 @@ ezRead<-function(dir="./",skip=40,SAMPLENAME='Sample Name',TARGETNAME='Target Na
  #' @param CtTh if Ct Value is more than CtTh, this value sets to CtMax.
  #' @param CtMean and dCt calculation separated by Sample,Target,ID.
  #' @param technical TRUE...technical replicate is remained / FALSE...technical control is removed
+ #' @param RQcontrolIsOne TRUE... RQ of the biological control is set to 1.
  #' @return dataframe.
 #' @export
-ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE,technical=TRUE)
+ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE,technical=TRUE,RQcontrolIsOne=TRUE)
 {
 library(dplyr)
     if(NROW(df[grepl(internalControl,df$Targets),]) ==0 )
@@ -163,10 +164,15 @@ library(dplyr)
 #ddCtMean
     x3<-x3%>% group_by(Samples,Targets) %>% mutate(ddCtMean=mean(ddCt)) 
     x3<-x3%>% mutate(RQ=2^(-ddCt))
+    if(RQcontrolIsOne==TRUE){
+        x3[x3$Samples==biologicalControl,"RQ"]=1
+    }
     x3<-x3%>% mutate(RQMEAN=mean(RQ)) %>% ungroup() #%>% as.data.frame()
 
+    #control を 1にする
+
     #Sample nameを元に戻し、biologicalControl名を記録
-    #x3$Samples<-x3$biologicalControl
+    x3$Samples<-x3$biologicalControl
     x3$biologicalControl <- biologicalControl
 
     if(technical==FALSE)
