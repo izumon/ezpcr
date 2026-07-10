@@ -1,4 +1,5 @@
-
+# update予定
+# biologicalControlが複数サンプルある場合、それらすべての平均をコントロールとするが、サンプル名は変更しない仕様にする
 
 #' ezUpdate
 #' ezpcrをアップデートする
@@ -145,7 +146,7 @@ library(dplyr)
         ungroup()
 
 #biological controlを保存
-    x3$biologicalControl <- biologicalControl
+    x3$biologicalControl <- x3$Samples
 
 #ddCt
     bcons<-paste(unique(grep(biologicalControl,x3$Samples,value=TRUE)),collapse=", ")
@@ -159,6 +160,10 @@ library(dplyr)
         x3<-x3 %>% transform(ddCt=if_else(Targets==x, dCt-bcontrol[x],ddCt))
     }
 
+    #Sample nameを元に戻し、biologicalControl名を記録
+    x3$Samples<-x3$biologicalControl
+    x3$biologicalControl <- biologicalControl
+
 #ddCtMean
     x3<-x3%>% group_by(Samples,Targets) %>% mutate(ddCtMean=mean(ddCt)) 
     x3<-x3%>% mutate(RQ=2^(-ddCt))
@@ -168,7 +173,7 @@ library(dplyr)
     if(technical==FALSE)
     {
         x3<-ezShrink(x3)
-        print("technical replicates were grouped.")
+        print("technical replicates were grouped together.")
     }
 
     #x3<-x3%>% mutate(rdCtMean=-dCtMean)
