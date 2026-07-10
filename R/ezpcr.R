@@ -166,7 +166,7 @@ library(dplyr)
     x3<-x3%>% mutate(RQMEAN=mean(RQ)) %>% ungroup() #%>% as.data.frame()
 
     #Sample nameを元に戻し、biologicalControl名を記録
-    x3$Samples<-x3$biologicalControl
+    #x3$Samples<-x3$biologicalControl
     x3$biologicalControl <- biologicalControl
 
     if(technical==FALSE)
