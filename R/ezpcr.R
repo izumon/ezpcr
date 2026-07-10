@@ -160,21 +160,20 @@ library(dplyr)
         x3<-x3 %>% transform(ddCt=if_else(Targets==x, dCt-bcontrol[x],ddCt))
     }
 
-    #Sample nameを元に戻し、biologicalControl名を記録
-    x3$Samples<-x3$biologicalControl
-    x3$biologicalControl <- biologicalControl
-
 #ddCtMean
     x3<-x3%>% group_by(Samples,Targets) %>% mutate(ddCtMean=mean(ddCt)) 
     x3<-x3%>% mutate(RQ=2^(-ddCt))
     x3<-x3%>% mutate(RQMEAN=mean(RQ)) %>% ungroup() #%>% as.data.frame()
-
 
     if(technical==FALSE)
     {
         x3<-ezShrink(x3)
         print("technical replicates were grouped together.")
     }
+
+    #Sample nameを元に戻し、biologicalControl名を記録
+    x3$Samples<-x3$biologicalControl
+    x3$biologicalControl <- biologicalControl
 
     #x3<-x3%>% mutate(rdCtMean=-dCtMean)
     return(as.data.frame(x3))
