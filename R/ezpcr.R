@@ -165,15 +165,16 @@ library(dplyr)
     x3<-x3%>% mutate(RQ=2^(-ddCt))
     x3<-x3%>% mutate(RQMEAN=mean(RQ)) %>% ungroup() #%>% as.data.frame()
 
+    #Sample nameを元に戻し、biologicalControl名を記録
+    x3$Samples<-x3$biologicalControl
+    x3$biologicalControl <- biologicalControl
+
     if(technical==FALSE)
     {
         x3<-ezShrink(x3)
         print("technical replicates were grouped together.")
     }
 
-    #Sample nameを元に戻し、biologicalControl名を記録
-    x3$Samples<-x3$biologicalControl
-    x3$biologicalControl <- biologicalControl
 
     #x3<-x3%>% mutate(rdCtMean=-dCtMean)
     return(as.data.frame(x3))
