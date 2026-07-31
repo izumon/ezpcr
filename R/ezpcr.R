@@ -314,10 +314,11 @@ custom_scale <- function(x) {
     if(LOG10==TRUE)
     {
 
-    p<-last_plot()+ylab("Log10 Relative Quantity")+scale_y_continuous(limit=c(NA,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , trans=tran)
+    p<-last_plot()+ylab("Log10 Relative Quantity") + scale_y_continuous(limit=c(NA,max(log10(data$RQ))*y_extension) , trans=tran)
+
     }else
     {
-        p<-last_plot()+ylab("Relative Quantity")+scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , expand=c(0,0), breaks = pretty_breaks(n=3),label=custom_scale,n.breaks=3, trans=tran)
+        p<-last_plot()+ylab("Relative Quantity") + scale_y_continuous(limit=c(0,max(data1$RQ))*y_extension , expand=c(0,0), breaks = pretty_breaks(n=3), label=custom_scale, n.breaks=3, trans=tran)
     }
 
     #optional
