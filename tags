@@ -122,6 +122,8 @@ signifc	R/ezpcr.R	/^    sigdata <- data.frame(Samples="",y=yextends,xmin=factor(
 tables	R/ezpcr.R	/^    tables<-lapply(files,function(f)$/;"	v	function:ezRead
 tdata	R/ezpcr.R	/^        tdata <- subset(data,subset=Targets==tg)$/;"	v	function:ttest.anonFunc2581144a0d00
 tdata	R/ezpcr.R	/^        tdata <- subset(data,subset=Targets==tg)$/;"	v	function:wilcoxtest.anonFunc2581144a0e00
+tran	R/ezpcr.R	/^        tran<-"log10"$/;"	v	function:ezGraph
+trans	R/ezpcr.R	/^scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(/;"	n	nameattr:ezGraph.anonFunc2581144a0600.anonVec2581144a0906.expand
 ttest	R/ezpcr.R	/^ttest <- function(data, control,samples=c()){$/;"	f
 under_10k	R/ezpcr.R	/^      under_10k <- which(x<10**4)$/;"	v	function:ezGraph.custom_scale
 upper	R/ezpcr.R	/^            upper <- Q3 + 1.5*IQR$/;"	v	function:check_outlier.anonFunc2581144a0b00

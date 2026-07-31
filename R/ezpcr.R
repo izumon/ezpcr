@@ -196,6 +196,7 @@ library(dplyr)
  #' @param samplenames sample names that is contained in dataframe$Samples.
  #' @param targets gene names that is contained in dataframe$Targets.
  #' @param dot TRUE/FALSE, indicationg whether the plot includes a dotplot .
+ #' @param log10 TRUE/FALSE, create the plot on a log scale .
  #' @param linewidth line thickness of axis lines and bar plot lines.
  #' @param textSize text size of tick labels.
  #' @param labelSize text size of sample labels.
@@ -215,7 +216,7 @@ library(dplyr)
  #' @examples p <- ezGraph(dataframe,samplenames=c("S1","S2","S3"),dot=FALSE,genes=c("gene1","gene2"),color=c("red","blue","white"))
  #' plot(p)
  #' @export
-ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signiflist=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE,significant_column="signif",textNotSignif="n.s.",signifSize=10)
+ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signiflist=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE,significant_column="signif",textNotSignif="n.s.",signifSize=10,log10=FALSE)
 {
     library(ggplot2)
     library(dplyr)
@@ -243,6 +244,13 @@ custom_scale <- function(x) {
       label[under_10k] <- label2[under_10k]
       parse(text=label)
 }
+    #ログスケールか否か
+    if(log10==TRUE)
+    {
+        tran<-"log10"
+    }else{
+        tran<-"identity"
+    }
 
     if(is.null(genes)){
         genes<-unique(data$Targets)
@@ -283,7 +291,7 @@ custom_scale <- function(x) {
         width=0.5 ,size=linewidth)+ #エラーバーも自動で計算してくれる 標準誤差(mean_se)を使用 標準偏差は(mean_sdl,fun.args = list(mult=1)) あるいはggpubrのmean_sd
 #	scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0))+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる
 
-scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(n=3),label=custom_scale,n.breaks=3)+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる breaks+pretty_breaksでtick数を変更できる
+scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(n=3),label=custom_scale,n.breaks=3, trans=tran)+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる breaks+pretty_breaksでtick数を変更できる
 	ggtitle(g)+ 
 	theme_classic()+ #シンプルなデザインに変更
     coord_cartesian(ylim = c(0, NA))+ #エラーバーが切れるのを防ぐ
