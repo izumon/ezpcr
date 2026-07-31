@@ -216,7 +216,7 @@ library(dplyr)
  #' @examples p <- ezGraph(dataframe,samplenames=c("S1","S2","S3"),dot=FALSE,genes=c("gene1","gene2"),color=c("red","blue","white"))
  #' plot(p)
  #' @export
-ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signiflist=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE,significant_column="signif",textNotSignif="n.s.",signifSize=10,log10=FALSE)
+ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signiflist=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE,significant_column="signif",textNotSignif="n.s.",signifSize=10,LOG10=FALSE)
 {
     library(ggplot2)
     library(dplyr)
@@ -245,7 +245,7 @@ custom_scale <- function(x) {
       parse(text=label)
 }
     #ログスケールか否か
-    if(log10==TRUE)
+    if(LOG10==TRUE)
     {
         tran<-"log10"
     }else{
@@ -263,14 +263,14 @@ custom_scale <- function(x) {
         datas<-lapply(samplenames,function(x) {
             d<-data[grepl(x,data$Samples),]
             cat(sprintf("\033[31m%s\033[0m is renamed to \033[32m%s\033[0m\r\n",paste(unique(d$Samples),collapse=", "),x))
-            d[grepl(x,d$Samples),"Samples"]<-x
+            d[grepl(x,d$Samples),"Samples"] <- x
             return(d)
         })#end lapply samplenames
 
         data0<-bind_rows(datas)
-        data0$Samples<-gsub(newline,"\r\n",data0$Samples)
-        samplenames <- gsub(newline,"\r\n",samplenames)
-        data0$Samples<-factor(data0$Samples,levels=samplenames)
+        data0$Samples<-gsub(newline,"\r\n", data0$Samples)
+        samplenames <- gsub(newline,"\r\n", samplenames)
+        data0$Samples<-factor(data0$Samples, levels=samplenames)
 
         #グラフ化する遺伝子を選択
         if(NROW(targets)!=0){
@@ -282,7 +282,7 @@ custom_scale <- function(x) {
 	p <- ggplot(data = data1 , aes(x = Samples, y = RQ, fill= Samples)) + #aesで使用するパラメータを指定
 
     #plot ===
-	stat_summary(geom="bar", fun=mean, color="black", linewidth=linewidth,width=0.7 )+ #自動的に平均化した棒グラフを作ってくれる stat_summary
+	stat_summary(geom="bar", fun=mean, color="black", linewidth=linewidth, width=0.7 )+ #自動的に平均化した棒グラフを作ってくれる stat_summary
     #group化する際には barとerrorbarにpositoin = position_dodge(0.5)などを付けること
 	stat_summary(geom="errorbar",position="dodge",
                fun = mean, 
@@ -291,7 +291,7 @@ custom_scale <- function(x) {
         width=0.5 ,size=linewidth)+ #エラーバーも自動で計算してくれる 標準誤差(mean_se)を使用 標準偏差は(mean_sdl,fun.args = list(mult=1)) あるいはggpubrのmean_sd
 #	scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0))+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる
 
-scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(n=3),label=custom_scale,n.breaks=3, trans=tran)+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる breaks+pretty_breaksでtick数を変更できる
+scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , expand=c(0,0), breaks = pretty_breaks(n=3),label=custom_scale,n.breaks=3, trans=tran)+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる breaks+pretty_breaksでtick数を変更できる
 	ggtitle(g)+ 
 	theme_classic()+ #シンプルなデザインに変更
     coord_cartesian(ylim = c(0, NA))+ #エラーバーが切れるのを防ぐ
@@ -320,7 +320,7 @@ scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks 
     #引数で有意差を追加
     PSIGNIF<-NULL #有意差プロット
     if(length(signiflist)!=0){
-        PSIGNIF <- ezSignif(data1,pairs=signiflist,textsize=labelSize,significant_column=significant_column,txtNotSignif=textNotSignif,signifSize=signifSize)
+        PSIGNIF <- ezSignif(data1,pairs=signiflist,textsize=labelSize,significant_column=significant_column,txtNotSignif=textNotSignif,signifSize=signifSize,LOG10=LOG10)
 
     #add text ===
 #  p<-last_plot()+geom_signif(
@@ -501,7 +501,8 @@ remove_outlier <- function(data,samples=c(),RQ=FALSE){
 
 #' t.test 
 #' t検定. 比較対象が複数あるときはBH法による多重検定
-#' @param data data frame which contains Samples,Targets and dCt. @param control control name which is contaied in column Samples.
+#' @param data data frame which contains Samples,Targets and dCt. 
+#' @param control control name which is contaied in column Samples.
 #' @param samples sample names which is contaied in column Samples.
 #' @export
 ttest <- function(data, control,samples=c()){
@@ -710,7 +711,7 @@ ezShrink<-function(data)
 #' @param significant_column you can set optional data column as annotation, default="signif"
 #' @return ggsignif::geom_signif
 #' @export
-ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,significant_column="signif",txtNotSignif="n.s.",signifSize=25)
+ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,significant_column="signif",txtNotSignif="n.s.",signifSize=25,LOG10=FALSE)
 {
     if(!(significant_column %in% colnames(data))){
         print("significant data is not present in the dataframe...")

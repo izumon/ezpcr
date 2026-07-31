@@ -49,12 +49,12 @@ data1	R/ezpcr.R	/^            data1<-subset(data0,subset=Targets==g)$/;"	v	funct
 p	R/ezpcr.R	/^	p <- ggplot(data = data1 , aes(x = Samples, y = RQ, fill= Samples)) + #aesで使用するパラ/;"	v	function:ezGraph.anonFunc2581144a0600
 anonFunc2581144a0700	R/ezpcr.R	/^               fun.min = function(x) pmax(mean(x) - sd(x), 0), $/;"	f	function:ezGraph.anonFunc2581144a0600
 anonFunc2581144a0800	R/ezpcr.R	/^               fun.max = function(x) mean(x) + sd(x),$/;"	f	function:ezGraph.anonFunc2581144a0600
-anonVec2581144a0906	R/ezpcr.R	/^scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(/;"	c	function:ezGraph.anonFunc2581144a0600
-expand	R/ezpcr.R	/^scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(/;"	n	vector:ezGraph.anonFunc2581144a0600.anonVec2581144a0906	constructor:c
-breaks	R/ezpcr.R	/^scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(/;"	n	nameattr:ezGraph.anonFunc2581144a0600.anonVec2581144a0906.expand
-label	R/ezpcr.R	/^scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(/;"	n	nameattr:ezGraph.anonFunc2581144a0600.anonVec2581144a0906.expand
-n.breaks	R/ezpcr.R	/^scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(/;"	n	nameattr:ezGraph.anonFunc2581144a0600.anonVec2581144a0906.expand
-trans	R/ezpcr.R	/^scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0), breaks = pretty_breaks(/;"	n	nameattr:ezGraph.anonFunc2581144a0600.anonVec2581144a0906.expand
+anonVec2581144a0906	R/ezpcr.R	/^scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , exp/;"	c	function:ezGraph.anonFunc2581144a0600
+expand	R/ezpcr.R	/^scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , exp/;"	n	vector:ezGraph.anonFunc2581144a0600.anonVec2581144a0906	constructor:c
+breaks	R/ezpcr.R	/^scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , exp/;"	n	nameattr:ezGraph.anonFunc2581144a0600.anonVec2581144a0906.expand
+label	R/ezpcr.R	/^scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , exp/;"	n	nameattr:ezGraph.anonFunc2581144a0600.anonVec2581144a0906.expand
+n.breaks	R/ezpcr.R	/^scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , exp/;"	n	nameattr:ezGraph.anonFunc2581144a0600.anonVec2581144a0906.expand
+trans	R/ezpcr.R	/^scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , exp/;"	n	nameattr:ezGraph.anonFunc2581144a0600.anonVec2581144a0906.expand
 PSIGNIF	R/ezpcr.R	/^    PSIGNIF<-NULL #有意差プロット$/;"	v	function:ezGraph.anonFunc2581144a0600
 lS	R/ezpcr.R	/^lS<-function(df)$/;"	f
 lSamples	R/ezpcr.R	/^lSamples<-function(df)$/;"	f
