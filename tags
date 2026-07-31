@@ -41,7 +41,7 @@ anonFunc2581144a0f00	R/ezpcr.R	/^        results<-lapply(unique(data$Targets),fu
 anonFunc2581144a1300	R/ezpcr.R	/^    xmins <- lapply(pairs,function(x){$/;"	f	function:ezGraph.ezSignif
 anonFunc2581144a1400	R/ezpcr.R	/^    xmax <- lapply(pairs,function(x){$/;"	f	function:ezGraph.ezSignif
 anonFunc2581144a1500	R/ezpcr.R	/^    sig <- lapply(xmax,function(x){$/;"	f	function:ezGraph.ezSignif
-anonVec2581144a0a06	R/ezpcr.R	/^        p<-last_plot()+ylab("Log10 Relative Quantity") + scale_y_continuous(limint=c(NA,NA),expa/;"	c	function:ezGraph.anonFunc2581144a0600
+anonVec2581144a0a06	R/ezpcr.R	/^        p<-last_plot()+ylab("Log10 Relative Quantity") + scale_y_continuous(limit=c(NA,NA),expan/;"	c	function:ezGraph.anonFunc2581144a0600
 anonVec2581144a0b06	R/ezpcr.R	/^        p<-last_plot()+ylab("Relative Quantity") + scale_y_continuous(limit=c(0,max(data1$RQ))*y/;"	c	function:ezGraph.anonFunc2581144a0600
 atable	R/ezpcr.R	/^    atable<-bind_rows(tables)$/;"	v	function:ezRead
 bc	R/ezpcr.R	/^        bc <- unique(data$biologicalControl)$/;"	v	function:ezGraph
@@ -69,7 +69,7 @@ d	R/ezpcr.R	/^            d<-data[grepl(x,data$Samples),]$/;"	v	function:ezGraph
 data0	R/ezpcr.R	/^        data0<-bind_rows(datas)$/;"	v	function:ezGraph
 data1	R/ezpcr.R	/^            data1<-subset(data0,subset=Targets==g)$/;"	v	function:ezGraph.anonFunc2581144a0600
 datas	R/ezpcr.R	/^        datas<-lapply(samplenames,function(x) {$/;"	v	function:ezGraph
-expand	R/ezpcr.R	/^        p<-last_plot()+ylab("Log10 Relative Quantity") + scale_y_continuous(limint=c(NA,NA),expa/;"	n	vector:ezGraph.anonFunc2581144a0600.anonVec2581144a0a06	constructor:c
+expand	R/ezpcr.R	/^        p<-last_plot()+ylab("Log10 Relative Quantity") + scale_y_continuous(limit=c(NA,NA),expan/;"	n	vector:ezGraph.anonFunc2581144a0600.anonVec2581144a0a06	constructor:c
 expand	R/ezpcr.R	/^        p<-last_plot()+ylab("Relative Quantity") + scale_y_continuous(limit=c(0,max(data1$RQ))*y/;"	n	vector:ezGraph.anonFunc2581144a0600.anonVec2581144a0b06	constructor:c
 ext	R/ezpcr.R	/^ext<-function(data,Sample="",Target="")$/;"	f	function:ezGraph
 ezCalc	R/ezpcr.R	/^ezCalc<-function(df,biologicalControl,internalControl="GAPDH",CtMax=40,CtTh=40,ID=TRUE,technical/;"	f
