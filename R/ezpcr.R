@@ -310,10 +310,8 @@ custom_scale <- function(x) {
     legend.position = legendPosition #without legend
     )
 
-,
     if(LOG10==TRUE)
     {
-
     p<-last_plot()+ylab("Log10 Relative Quantity") + scale_y_continuous(limit=c(NA,max(log10(data$RQ))*y_extension) , trans=tran)
 
     }else
