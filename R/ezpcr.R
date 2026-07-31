@@ -735,7 +735,13 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
                             }) %>% unlist()
 
     #yの下限、上限を取得
-    RQ<-if_else(log10,log10(data$RQ),data$RQ)
+    if(log10==TRUE)
+    {
+        RQ=log10(data$RQ)
+        print("y axis is set to log10 sale") 
+    }else{
+        RQ=data$RQ
+    }
     increment <- max(RQ)*(0.02*(textsize/5)) #y軸の拡張値
     ymin <- max(RQ) + increment #yの最大値
     ymax <- ymin + increment * NROW(xmax) + increment
