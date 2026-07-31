@@ -196,7 +196,7 @@ library(dplyr)
  #' @param samplenames sample names that is contained in dataframe$Samples.
  #' @param targets gene names that is contained in dataframe$Targets.
  #' @param dot TRUE/FALSE, indicationg whether the plot includes a dotplot .
- #' @param log10 TRUE/FALSE, create the plot on a log scale .
+ #' @param LOG10 TRUE/FALSE, create the plot on a log scale .
  #' @param linewidth line thickness of axis lines and bar plot lines.
  #' @param textSize text size of tick labels.
  #' @param labelSize text size of sample labels.
@@ -291,7 +291,9 @@ custom_scale <- function(x) {
         width=0.5 ,size=linewidth)+ #エラーバーも自動で計算してくれる 標準誤差(mean_se)を使用 標準偏差は(mean_sdl,fun.args = list(mult=1)) あるいはggpubrのmean_sd
 #	scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0))+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる
 
-scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , expand=c(0,0), breaks = pretty_breaks(n=3),label=custom_scale,n.breaks=3, trans=tran)+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる breaks+pretty_breaksでtick数を変更できる
+    if_else(LOG10,
+scale_y_continuous(limit=c(NA,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , trans=tran),
+scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_extension) , expand=c(0,0), breaks = pretty_breaks(n=3),label=custom_scale,n.breaks=3, trans=tran))+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる breaks+pretty_breaksでtick数を変更できる
 	ggtitle(g)+ 
 	theme_classic()+ #シンプルなデザインに変更
     coord_cartesian(ylim = c(0, NA))+ #エラーバーが切れるのを防ぐ
@@ -309,7 +311,7 @@ scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_
     axis.ticks.x = element_blank(),
 	axis.ticks.length.y = unit(2,"mm"),
     legend.position = legendPosition #without legend
-    )
+    )+ylab(if_else(LOG10,"Log10 Relative Quantity","Relative Quantity"))
 
     #optional
     if(dot==TRUE)

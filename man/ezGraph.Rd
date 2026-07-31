@@ -25,7 +25,7 @@ ezGraph(
   significant_column = "signif",
   textNotSignif = "n.s.",
   signifSize = 10,
-  log10 = FALSE
+  LOG10 = FALSE
 )
 }
 \arguments{
@@ -63,7 +63,7 @@ ezGraph(
 
 \item{signifSize}{text size of text of significant.}
 
-\item{log10}{TRUE/FALSE, create the plot on a log scale .}
+\item{LOG10}{TRUE/FALSE, create the plot on a log scale .}
 
 \item{txtNotSignif}{text if this data is not significant, txtNotSignif is put above significance bar.}
 }

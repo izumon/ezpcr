@@ -8,7 +8,9 @@ t検定. 比較対象が複数あるときはBH法による多重検定}
 ttest(data, control, samples = c())
 }
 \arguments{
-\item{data}{data frame which contains Samples,Targets and dCt. @param control control name which is contaied in column Samples.}
+\item{data}{data frame which contains Samples,Targets and dCt.}
+
+\item{control}{control name which is contaied in column Samples.}
 
 \item{samples}{sample names which is contaied in column Samples.}
 }
