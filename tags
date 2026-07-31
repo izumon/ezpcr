@@ -142,6 +142,6 @@ xmax	R/ezpcr.R	/^    xmax <- lapply(pairs,function(x){$/;"	v	function:ezSignif
 xmin	R/ezpcr.R	/^    sigdata <- data.frame(Samples="",y=yextends,xmin=factor(xmins,levels=levels(shrink$Samples))/;"	n	dataframe:ezSignif.sigdata
 xmins	R/ezpcr.R	/^    xmins <- lapply(pairs,function(x){$/;"	v	function:ezSignif
 y	R/ezpcr.R	/^    sigdata <- data.frame(Samples="",y=yextends,xmin=factor(xmins,levels=levels(shrink$Samples))/;"	n	dataframe:ezSignif.sigdata
-yextends	R/ezpcr.R	/^    yextends<-seq(ymin,ymax,by=increment)$/;"	v	function:ezSignif
+yextends	R/ezpcr.R	/^        yextends<-seq(ymin,ymax,by=increment)$/;"	v	function:ezSignif
 ymax	R/ezpcr.R	/^    ymax <- ymin + increment * NROW(xmax) + increment$/;"	v	function:ezSignif
 ymin	R/ezpcr.R	/^    ymin <- max(RQ) + increment #yの最大値$/;"	v	function:ezSignif

@@ -722,6 +722,7 @@ ezShrink<-function(data)
 #' @export
 ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,significant_column="signif",txtNotSignif="n.s.",signifSize=25,LOG10=FALSE)
 {
+
     if(!(significant_column %in% colnames(data))){
         print("significant data is not present in the dataframe...")
         return(NULL)
@@ -736,6 +737,9 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
     #    print(sprintf("signif annotation error::argument signif list is invalid samples=%s",Samples))
     #    return(NULL)
     #}
+
+    #NAを除去
+    data<-data[!is.na(data$RQ),]
 
     xmins <- lapply(pairs,function(x){
                         return(x[1])
@@ -757,9 +761,9 @@ ezSignif<-function(data,pairs=list(),textsize=3.88,size=0.5,tip_length=0,signifi
     ymax <- ymin + increment * NROW(xmax) + increment
 
     #yの位置を決定
-    yextends<-seq(ymin,ymax,by=increment)
-    if(NROW(yextends)>NROW(xmax)){yextends<-yextends[1:NROW(xmax)]}
-    if(NROW(yextends)<NROW(xmax)){yextends<-append(yextends,yextends[NROW(yextends)]+increment)}
+        yextends<-seq(ymin,ymax,by=increment)
+        if(NROW(yextends)>NROW(xmax)){yextends<-yextends[1:NROW(xmax)]}
+        if(NROW(yextends)<NROW(xmax)){yextends<-append(yextends,yextends[NROW(yextends)]+increment)}
 
     #表示データを取得
     shrink <- data[!duplicated(data$Samples),]
