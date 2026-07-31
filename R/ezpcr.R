@@ -311,7 +311,16 @@ scale_y_continuous(limit=c(0,if_else(LOG10,max(log10(data$RQ)),max(data1$RQ))*y_
     axis.ticks.x = element_blank(),
 	axis.ticks.length.y = unit(2,"mm"),
     legend.position = legendPosition #without legend
-    )+ylab(if_else(LOG10,"Log10 Relative Quantity","Relative Quantity"))
+    )
+
+    if(LOG10==TRUE)
+    {
+
+    p<-last_plot()+ylab("Log10 Relative Quantity")
+    }else
+    {
+        p<-last_plot()+ylab("Relative Quantity")
+    }
 
     #optional
     if(dot==TRUE)
