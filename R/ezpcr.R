@@ -248,7 +248,7 @@ custom_scale <- function(x) {
     if(LOG10==TRUE)
     {
         tran<-"log10"
-        data$RQ<-log10(data$RQ)
+       # data$RQ<-log10(data$RQ)
     }else{
         tran<-"identity"
     }
