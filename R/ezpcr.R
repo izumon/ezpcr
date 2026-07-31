@@ -248,6 +248,7 @@ custom_scale <- function(x) {
     if(LOG10==TRUE)
     {
         tran<-"log10"
+        data$RQ<-log10(data$RQ)
     }else{
         tran<-"identity"
     }
@@ -312,9 +313,7 @@ custom_scale <- function(x) {
 
     if(LOG10==TRUE)
     {
-        print("y scale is set to log10")
-    p<-last_plot()+ylab("Log10 Relative Quantity") + scale_y_continuous( trans="log10")
-
+        p<-last_plot()+ylab("Relative Quantity") + scale_y_continuous( breaks = pretty_breaks(n=3), label=custom_scale, n.breaks=3)
     }else
     {
         p<-last_plot()+ylab("Relative Quantity") + scale_y_continuous(limit=c(0,max(data1$RQ))*y_extension , expand=c(0,0), breaks = pretty_breaks(n=3), label=custom_scale, n.breaks=3)

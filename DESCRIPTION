@@ -1,6 +1,6 @@
 Package: ezpcr
 Title: What the Package Does (One Line, Title Case)
-Version: 0.1.7.9.16
+Version: 0.1.7.9.17
 Authors@R: 
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
