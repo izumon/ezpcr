@@ -10,6 +10,8 @@ ezGraph(
   targets = c(),
   dot = FALSE,
   linewidth = 2,
+  barwidth = 0.7,
+  errorbarwidth = 0.5,
   textSize = 22,
   labelSize = 26,
   titleSize = 32,
@@ -38,6 +40,10 @@ ezGraph(
 \item{dot}{TRUE/FALSE, indicationg whether the plot includes a dotplot .}
 
 \item{linewidth}{line thickness of axis lines and bar plot lines.}
+
+\item{barwidth}{bar width. default=0.70.}
+
+\item{errorbarwidth}{error bar width. default=0.50.}
 
 \item{textSize}{text size of tick labels.}
 

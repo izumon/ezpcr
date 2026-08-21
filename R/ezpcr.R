@@ -198,6 +198,8 @@ library(dplyr)
  #' @param dot TRUE/FALSE, indicationg whether the plot includes a dotplot .
  #' @param LOG10 TRUE/FALSE, create the plot on a log scale .
  #' @param linewidth line thickness of axis lines and bar plot lines.
+ #' @param barwidth bar width. default=0.70.
+ #' @param errorbarwidth error bar width. default=0.50.
  #' @param textSize text size of tick labels.
  #' @param labelSize text size of sample labels.
  #' @param titleSize text size of gene name.
@@ -216,7 +218,7 @@ library(dplyr)
  #' @examples p <- ezGraph(dataframe,samplenames=c("S1","S2","S3"),dot=FALSE,genes=c("gene1","gene2"),color=c("red","blue","white"))
  #' plot(p)
  #' @export
-ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signiflist=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE,significant_column="signif",textNotSignif="n.s.",signifSize=10,LOG10=FALSE)
+ezGraph<-function(data,samplenames=NULL,targets=c(),dot=FALSE,linewidth=2,barwidth=0.70,errorbarwidth=0.5,textSize=22,labelSize=26,titleSize=32,legendPosition="none",genes=NULL,signiflist=list(),color=c(),dotsize=3,newline=" ",y_extension=1.05,controlIsOne=TRUE,technical=TRUE,significant_column="signif",textNotSignif="n.s.",signifSize=10,LOG10=FALSE)
 {
     library(ggplot2)
     library(dplyr)
@@ -283,13 +285,13 @@ custom_scale <- function(x) {
 	p <- ggplot(data = data1 , aes(x = Samples, y = RQ, fill= Samples)) + #aesで使用するパラメータを指定
 
     #plot ===
-	stat_summary(geom="bar", fun=mean, color="black", linewidth=linewidth, width=0.7 )+ #自動的に平均化した棒グラフを作ってくれる stat_summary
+	stat_summary(geom="bar", fun=mean, color="black", linewidth=linewidth, width=barwidth )+ #自動的に平均化した棒グラフを作ってくれる stat_summary
     #group化する際には barとerrorbarにpositoin = position_dodge(0.5)などを付けること
 	stat_summary(geom="errorbar",position="dodge",
                fun = mean, 
                fun.min = function(x) pmax(mean(x) - sd(x), 0), 
                fun.max = function(x) mean(x) + sd(x),
-        width=0.5 ,size=linewidth)+ #エラーバーも自動で計算してくれる 標準誤差(mean_se)を使用 標準偏差は(mean_sdl,fun.args = list(mult=1)) あるいはggpubrのmean_sd
+        width=errorbarwidth ,size=linewidth)+ #エラーバーも自動で計算してくれる 標準誤差(mean_se)を使用 標準偏差は(mean_sdl,fun.args = list(mult=1)) あるいはggpubrのmean_sd
 #	scale_y_continuous(limit=c(0,max(data1$RQ)*y_extension) , expand=c(0,0))+ #x軸の最小値を０に固定 NAをmax(data)*xにすると、最大値を拡張できる
 
 	ggtitle(g)+ 
